@@ -1,0 +1,33 @@
+#!/usr/bin/env node --harmony
+
+let commander = require('commander');
+let pad = require('pad');
+let sfx = require('../index');
+
+const INIT_ACTION = [];
+
+
+commander
+    .version(require('../package.json').version)
+    .usage('<command>')
+    .description(`
+        For Example:
+            sfx init framework
+        
+    `);
+
+commander
+    .command('init <template>', 'init sfis | vue | react')
+    .action(name => {
+        commander.help();
+        process.exit(1);
+    });
+
+commander
+    .command('build')
+    .action(() => {
+        sfx.run();
+    });
+
+
+commander.parse(process.argv);

@@ -1,0 +1,8 @@
+{
+  "name": "test-vue-build",
+  "version": "0.0.1",
+  "license": "MIT",
+  "dependencies": {
+    "vue": "^2.2.1"
+  }
+}
