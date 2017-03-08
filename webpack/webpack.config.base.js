@@ -31,11 +31,11 @@ const PRE_LOADERS = [
 const LOADERS = [
     {
         test: /\.vue$/,
-        loader: 'vue'
+        loader: 'vue-loader'
     },
     {
         test: /\.js$/,
-        loader: 'babel',
+        loader: 'babel-loader',
         include: PROJECT_ROOT,
         exclude: /node_modules/
     },
@@ -70,14 +70,16 @@ for (let key in SFX_CONFIG.entry) {
         let files = SFX_CONFIG.entry[key];
         if (Array.isArray(files)) {
             files = [
-                INJECT_CLIENT,
                 ...files
             ];
         } else {
             files = [
-                INJECT_CLIENT,
                 files
             ];
+        }
+        console.log(process.env.NODE_ENV);
+        if (process.env.NODE_ENV === 'develop') {
+            files.unshift(INJECT_CLIENT);
         }
         entry[key] = files;
     }
@@ -88,6 +90,8 @@ module.exports = {
     devtool: 'source-map',
 
     entry: entry,
+
+    output: SFX_CONFIG.output || {},
 
     resolve: {
         extensions: ['.jsx', '.js', '.vue'],
@@ -129,7 +133,8 @@ module.exports = {
                         //}),
                         require('postcss-cssnext')()
                     ]
-                }
+                },
+                context: '/'
             }
         })
     ]

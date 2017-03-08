@@ -31,11 +31,19 @@ module.exports = merge(baseWebpackConfig, {
         }),
 
         // 启用压缩
-        new webpack.optimize.UglifyJsPlugin({
-            compress: {
-                warnings: false
+        ...(function () {
+            if (SFX_CONFIG.uglify) {
+                return [
+                    new webpack.optimize.UglifyJsPlugin({
+                        compress: {
+                            warnings: false
+                        }
+                    })
+                ];
             }
-        }),
+            return [];
+        } ()),
+
         
         new webpack.optimize.OccurrenceOrderPlugin(),
 

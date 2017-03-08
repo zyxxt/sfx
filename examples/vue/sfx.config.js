@@ -24,8 +24,15 @@ module.exports = {
         ]
     },
 
+    output: {
+        path: './dist',
+        publicPath: '/sfx/examples/vue/dist/',
+        filename: '[name].js',
+        chunkFilename: 'static/js/[name].js'
+    },
+
     // 是否启用压缩
-    uglify: true,
+    uglify: false,
 
     // 入口html文件配置，由于是单页，一般只配置login.html, index.html即可
     htmlPluginOptions: [
