@@ -8,30 +8,51 @@ let cssLoaders = require('./loader/css_loaders');
 const SFX_CONFIG = require('../lib/config');
 const PROJECT_ROOT = process.cwd();
 
-// eslint 检验
+let eslintConfig = require('../eslint/lint');
+
+// eslint 校验
 const PRE_LOADERS = [
 
-    // vue
+    // js vue 
     {
-        test: /\.vue$/,
-        loader: 'eslint',
+        test: /(\.vue|\.js)$/,
+        enforce: 'pre',
         include: PROJECT_ROOT,
-        exclude: /node_modules/
-    },
+        exclude: /node_modules/,
+        loader: 'eslint-loader',
+        options: Object.assign({
 
-    // js | jsx
-    {
-        test: /\.jsx?$/,
-        loader: 'eslint',
-        include: PROJECT_ROOT,
-        exclude: /node_modules/
+            // 检验出现告警后，是否继续往下检验
+            failOnWarning: true,
+
+            // 检验出现错误后，是否继续往下检验
+            failOnError: false,
+            
+            // 格式化输出
+            formatter: require('eslint-friendly-formatter')
+        }, eslintConfig.defaultConfig)
     }
 ];
 
 const LOADERS = [
+
+    ...PRE_LOADERS,
+
     {
         test: /\.vue$/,
-        loader: 'vue-loader'
+        loader: 'vue-loader',
+        options: {
+            autoprefixer: true,
+            loaders: cssLoaders({
+                sourceMap: true
+            }),
+            postcss: [
+                //require('autoprefixer')({
+                //    browsers: ['last 2 versions']
+                //}),
+                require('postcss-cssnext')()
+            ]
+        }
     },
     {
         test: /\.js$/,
@@ -61,8 +82,6 @@ const LOADERS = [
     }
 ];
 
-console.log(JSON.stringify(SFX_CONFIG.entry, false, 4));
-
 let entry = {};
 const INJECT_CLIENT = path.join(__dirname, './dev/client');
 for (let key in SFX_CONFIG.entry) {
@@ -77,7 +96,6 @@ for (let key in SFX_CONFIG.entry) {
                 files
             ];
         }
-        console.log(process.env.NODE_ENV);
         if (process.env.NODE_ENV === 'develop') {
             files.unshift(INJECT_CLIENT);
         }
@@ -108,19 +126,18 @@ module.exports = {
 
     module: {
 
-        // 新版本的webpack把自定义的字段全部删除了，比如下面的preLoaders, loaderOptionsPlugin都是这个原因
-        // preLoaders: PRE_LOADERS,
-
-        loaders: LOADERS
+        rules: LOADERS
 
     },
 
     plugins: [
+        new webpack.NoEmitOnErrorsPlugin(),
+        
         new webpack.LoaderOptionsPlugin({
             options: {
-                eslint: {
-                    formatter: require('eslint-friendly-formatter')
-                },
+                // eslint: {
+                //     formatter: require('eslint-friendly-formatter')
+                // },
 
                 vue: {
                     autoprefixer: true,

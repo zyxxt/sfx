@@ -3,7 +3,7 @@
  */
 
 require('shelljs/global');
-env.NODE_ENV = 'production';
+process.env.NODE_ENV = 'production';
 
 let ora = require('ora');
 let webpack = require('webpack');
@@ -26,7 +26,7 @@ exports.run = () => {
         process.stdout.write(stats.toString({
                 colors: true,
                 modules: false,
-                children: false,
+                children: true,
                 chunks: false,
                 chunkModules: false
             }) + '\n');

@@ -17,6 +17,12 @@ module.exports = {
     // 第三方框架代码放到公共目录
     assets3PartsDirectory: '3parts',
 
+    eslint: {
+        files: [
+            'src'
+        ]
+    },
+
     // webpack 的入口配置
     entry: {
         app: [

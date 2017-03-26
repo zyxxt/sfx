@@ -8,16 +8,16 @@ log4js.configure({
     appenders: [
         {
             "type": "console"
-        },
+        }/*,
         {
             "type": "file",
-            "filename": "../sfx.log",
+            "filename": "./sfx.log",
             "maxLogSize": 20480,
             "backups": 3,
             "category": "relative-logger"
-        }
+        }*/
     ],
-    replaceConsole: true
+    replaceConsole: false
 });
 
 module.exports = log4js.getLogger();

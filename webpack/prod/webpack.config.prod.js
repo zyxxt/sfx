@@ -44,11 +44,13 @@ module.exports = merge(baseWebpackConfig, {
             return [];
         } ()),
 
-        
+        // 给使用频率最高的模块分配最短的 id
         new webpack.optimize.OccurrenceOrderPlugin(),
 
-        // extract css into its own file
-        //new ExtractTextPlugin(utils.assetsPath('css/[name].[contenthash].css')),
+        // 去掉重复的代码
+        // new webpack.optimize.DedupePlugin(),
+
+        // 把css单独生成文件
         new ExtractTextPlugin('static/css/[name].css'),
 
         ...(function () {
@@ -56,7 +58,9 @@ module.exports = merge(baseWebpackConfig, {
                 return [];
             }
             return SFX_CONFIG.htmlPluginOptions.map(option => new HtmlWebpackPlugin(option));
-        } ())
+        } ()),
+
+        ...(SFX_CONFIG.plugins || [])
 
     ]
 });
