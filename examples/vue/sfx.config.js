@@ -18,6 +18,11 @@ module.exports = {
     assets3PartsDirectory: '3parts',
 
     eslint: {
+
+        // 具体配置可以参考以下链接
+        // http://eslint.org/docs/developer-guide/nodejs-api#cliengine
+
+        // 指明需要 eslint 的目录
         files: [
             'src'
         ]
@@ -30,10 +35,19 @@ module.exports = {
         ]
     },
 
+    // webpack 输出配置
     output: {
+
+        // 打包输出的目录
         path: './dist',
+
+        // 网站的根路径，比如BBC产品线：/bbc/，DC产品线：/dc/ui/
         publicPath: '/sfx/examples/vue/dist/',
+
+        // 合并后生成的JS的文件全名格式
         filename: '[name].js',
+
+        // chunk文件的命名格式
         chunkFilename: 'static/js/[name].js'
     },
 
@@ -59,8 +73,26 @@ module.exports = {
             },
             chunksSortMode: 'dependency'
         }
-    ]
+    ],
 
+    develop: {
 
+        host: '',
+        port: 8090,
+        https: true,
+
+        beforeCreateServer () {
+            return new Promise(function (resolve, reject) {
+                setTimeout(() => {
+                    resolve();
+                }, 3000);
+            });
+        },
+
+        afterCreateServer () {
+            
+        }
+
+    }
 
 };
