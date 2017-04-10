@@ -16,5 +16,4 @@ let app = new Vue({
     }
 
 });
-let xxxxx;
 app.$mount('#app');

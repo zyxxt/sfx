@@ -4,18 +4,18 @@
 
 let path = require('path');
 
+// build时生成的目录
+const ASSETS_ROOT = path.resolve(__dirname, './dist');
+
+// build时生成的所有静态资源的目录，目录下面会有js, css, img, font等
+const STATIC_DIRECTORY = 'static';
+
+// 第三方框架代码放到公共目录
+const THIRD_DIRECTORY = '3parts';
+
 module.exports = {
 
     version: '1.0',
-
-    // build时生成的目录
-    assetsRoot: path.resolve(__dirname, './dist'),
-
-    // build时生成的所有静态资源的目录，目录下面会有js, css, img, font等
-    assetsSubDirectory: 'static',
-
-    // 第三方框架代码放到公共目录
-    assets3PartsDirectory: '3parts',
 
     eslint: {
 
@@ -35,20 +35,28 @@ module.exports = {
         ]
     },
 
+    // 第三方代码单独打包
+    thirdEntry: {
+        vueAll: [
+            'vue'
+        ]
+    },
+    thirdDist: THIRD_DIRECTORY,
+
     // webpack 输出配置
     output: {
 
         // 打包输出的目录
-        path: './dist',
+        path: ASSETS_ROOT,
 
         // 网站的根路径，比如BBC产品线：/bbc/，DC产品线：/dc/ui/
         publicPath: '/sfx/examples/vue/dist/',
 
         // 合并后生成的JS的文件全名格式
-        filename: '[name].js',
+        filename: `${STATIC_DIRECTORY}/js/[name].[chunkhash].js`,
 
         // chunk文件的命名格式
-        chunkFilename: 'static/js/[name].js'
+        chunkFilename: `${STATIC_DIRECTORY}/js/[name].[chunkhash].js`
     },
 
     // 是否启用压缩
@@ -67,9 +75,9 @@ module.exports = {
 
             // 压缩选项
             minify: {
-                removeComments: true,
-                collapseWhitespace: true,
-                removeAttributeQuotes: true
+                removeComments: false,
+                collapseWhitespace: false,
+                removeAttributeQuotes: false
             },
             chunksSortMode: 'dependency'
         }

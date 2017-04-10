@@ -103,57 +103,62 @@ for (let key in SFX_CONFIG.entry) {
     }
 }
 
-module.exports = {
+module.exports = function () {
+    return {
 
-    devtool: 'source-map',
+        devtool: 'source-map',
 
-    entry: entry,
+        entry: entry,
 
-    output: SFX_CONFIG.output || {},
+        output: SFX_CONFIG.output || {},
 
-    resolve: {
-        extensions: ['.jsx', '.js', '.vue'],
-        // fallback: [path.join(PROJECT_ROOT, 'node_modules')],
-        alias: {
-            'vue$': 'vue/dist/vue',
-            'src': path.join(PROJECT_ROOT, 'src'),
-            'assets': path.join(PROJECT_ROOT, 'src', 'assets')
-        }
-    },
-    // resolveLoader: {
-    //     fallback: [path.join(PROJECT_ROOT, 'node_modules')]
-    // },
+        externals: SFX_CONFIG.externals,
 
-    module: {
-
-        rules: LOADERS
-
-    },
-
-    plugins: [
-        new webpack.NoEmitOnErrorsPlugin(),
-        
-        new webpack.LoaderOptionsPlugin({
-            options: {
-                // eslint: {
-                //     formatter: require('eslint-friendly-formatter')
-                // },
-
-                vue: {
-                    autoprefixer: true,
-                    loaders: cssLoaders({
-                        sourceMap: true
-                    }),
-                    postcss: [
-                        //require('autoprefixer')({
-                        //    browsers: ['last 2 versions']
-                        //}),
-                        require('postcss-cssnext')()
-                    ]
-                },
-                context: '/'
+        resolve: Object.assign({
+            extensions: ['.jsx', '.js', '.vue'],
+            // fallback: [path.join(PROJECT_ROOT, 'node_modules')],
+            alias: {
+                'vue$': 'vue/dist/vue',
+                'src': path.join(PROJECT_ROOT, 'src'),
+                'assets': path.join(PROJECT_ROOT, 'src', 'assets')
             }
-        })
-    ]
+        }, SFX_CONFIG.resolve || {}),
+        
+        // resolveLoader: {
+        //     fallback: [path.join(PROJECT_ROOT, 'node_modules')]
+        // },
 
+        module: {
+
+            rules: LOADERS
+
+        },
+
+        plugins: [
+            new webpack.NoEmitOnErrorsPlugin(),
+
+            new webpack.LoaderOptionsPlugin({
+                options: {
+                    // eslint: {
+                    //     formatter: require('eslint-friendly-formatter')
+                    // },
+
+                    vue: {
+                        autoprefixer: true,
+                        loaders: cssLoaders({
+                            sourceMap: true
+                        }),
+                        postcss: [
+                            //require('autoprefixer')({
+                            //    browsers: ['last 2 versions']
+                            //}),
+                            require('postcss-cssnext')()
+                        ]
+                    },
+                    context: '/'
+                }
+            })
+        ]
+
+    };
 };

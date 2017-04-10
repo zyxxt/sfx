@@ -4,13 +4,18 @@
 
 
 let eslint = require('./eslint/lint');
+
+let thirdTask = require('./webpack/third_part');
 let prodTask = require('./webpack/prod');
+
 
 exports.init = function (template) {};
 
 exports.run = function (action) {
+    thirdTask.run().then(() => {
+        prodTask.run();
+    });
 
-    prodTask.run();
 
 };
 
