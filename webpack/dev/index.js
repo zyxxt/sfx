@@ -35,7 +35,7 @@ function createServer (app) {
 function createApp () {
 
     let app = express();
-    let compiler = webpack(webpackConfig);
+    let compiler = webpack(webpackConfig());
 
     let devMiddleware = require('webpack-dev-middleware')(compiler, {
         publicPath: SFX_CONFIG.output.publicPath,
@@ -45,6 +45,7 @@ function createApp () {
         }
     });
     let hotMiddleware = require('webpack-hot-middleware')(compiler);
+
     // force page reload when html-webpack-plugin template changes
     compiler.plugin('compilation', function (compilation) {
         compilation.plugin('html-webpack-plugin-after-emit', function (data, cb) {
@@ -64,6 +65,11 @@ function createApp () {
     // compilation error display
     app.use(hotMiddleware);
 
+
+    // 第三方库代码
+    let thirdPartsPath = path.posix.join(SFX_CONFIG.output.publicPath, SFX_CONFIG.thirdDist);
+    app.use(thirdPartsPath, express.static(path.resolve(SFX_CONFIG.output.path, SFX_CONFIG.thirdDist)));
+
     return app;
 }
 
@@ -72,14 +78,14 @@ function createApp () {
 exports.run = () => {
     let app = createApp();
     let server = createServer(app);
-    let port = SFX_CONFIG.port;
-    let host = SFX_CONFIG.host;
+    let host = SFX_CONFIG.dev.host;
+    let port = SFX_CONFIG.dev.port;
     server.listen(port, host, function (err) {
         if (err) {
             console.error(err);
             return;
         }
-        let uri = (config.dev.https ? 'https://' : 'http://') + (host || 'localhost') + ':' + port;
+        let uri = (SFX_CONFIG.dev.https ? 'https://' : 'http://') + (host || 'localhost') + ':' + port;
         console.log('Listening at ' + uri + '\n');
         opn(uri);
     });

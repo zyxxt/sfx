@@ -53,10 +53,10 @@ module.exports = {
         publicPath: '/sfx/examples/vue/dist/',
 
         // 合并后生成的JS的文件全名格式
-        filename: `${STATIC_DIRECTORY}/js/[name].[chunkhash].js`,
+        filename: `${STATIC_DIRECTORY}/js/[name].[hash].js`,
 
         // chunk文件的命名格式
-        chunkFilename: `${STATIC_DIRECTORY}/js/[name].[chunkhash].js`
+        chunkFilename: `${STATIC_DIRECTORY}/js/[name].[hash].js`
     },
 
     // 是否启用压缩
@@ -83,11 +83,11 @@ module.exports = {
         }
     ],
 
-    develop: {
+    dev: {
 
         host: '',
         port: 8090,
-        https: true,
+        https: false,
 
         beforeCreateServer () {
             return new Promise(function (resolve, reject) {
