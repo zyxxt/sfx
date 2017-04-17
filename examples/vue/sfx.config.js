@@ -4,6 +4,8 @@
 
 let path = require('path');
 
+require('highcharts');
+
 // build时生成的目录
 const ASSETS_ROOT = path.resolve(__dirname, './dist');
 
@@ -28,11 +30,34 @@ module.exports = {
         ]
     },
 
+    sourceMap: 'source-map',
+
+    // 是否启用压缩
+    uglify: false,
+
     // webpack 的入口配置
-    entry: {
-        app: [
-            './src/home/index.js'
-        ]
+    entry (nodeEnv) {
+        if (nodeEnv === 'development') {
+            return {
+                app: [
+                    './examples/index.js'
+                ]
+            };
+        } else if (nodeEnv === 'production') {
+            return {
+                widgets: './src/index'
+            };
+        }
+    },
+
+    resolve (nodeEnv, resolve) {
+        return Object.assign({}, resolve, {
+            alias: {
+                'vue$': 'vue/dist/vue',
+                'src': path.resolve(__dirname, 'src'),
+                'sf-vue-component': path.resolve(__dirname, 'src/index')
+            }
+        });
     },
 
     // 第三方代码单独打包
@@ -50,7 +75,7 @@ module.exports = {
         path: ASSETS_ROOT,
 
         // 网站的根路径，比如BBC产品线：/bbc/，DC产品线：/dc/ui/
-        publicPath: '/sfx/examples/vue/dist/',
+        publicPath: '/',
 
         // 合并后生成的JS的文件全名格式
         filename: `${STATIC_DIRECTORY}/js/[name].[hash].js`,
@@ -59,8 +84,27 @@ module.exports = {
         chunkFilename: `${STATIC_DIRECTORY}/js/[name].[hash].js`
     },
 
-    // 是否启用压缩
-    uglify: false,
+    externals (nodeEnv) {
+        if (nodeEnv === 'production') {
+            return {
+                'vue': {
+                    // window
+                    root: 'Vue',
+                    // Commonjs (strict)
+                    commonjs: 'vue',
+                    // Commonjs (node.js)
+                    commonjs2: 'vue',
+                    // amd
+                    amd: 'vue'
+                },
+                'vue-resource': 'umd vue-resource',
+                'vue-router': 'umd vue-router',
+                'echarts': 'umd echarts',
+                'highcharts': 'umd highcharts'
+            };
+        }
+    },
+
 
     // 入口html文件配置，由于是单页，一般只配置login.html, index.html即可
     htmlPluginOptions: [
@@ -69,7 +113,7 @@ module.exports = {
             filename: 'index.html',
 
             // 源文件
-            template: 'src/index.html',
+            template: 'examples/index.html',
 
             inject: true,
 
@@ -98,7 +142,7 @@ module.exports = {
         },
 
         afterCreateServer () {
-            
+
         }
 
     }

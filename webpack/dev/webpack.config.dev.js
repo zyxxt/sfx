@@ -30,27 +30,6 @@ module.exports = function () {
 
         plugins: [
 
-            // http://vuejs.github.io/vue-loader/workflow/production.html
-            new webpack.DefinePlugin({
-                'process.env': {
-                    NODE_ENV: '"development"',
-                    version: `"${SFX_CONFIG.version}"`
-                }
-            }),
-
-            // 启用压缩
-            ...(function () {
-                if (SFX_CONFIG.uglify) {
-                    return [
-                        new webpack.optimize.UglifyJsPlugin({
-                            compress: {
-                                warnings: false
-                            }
-                        })
-                    ];
-                }
-                return [];
-            } ()),
 
             // 给使用频率最高的模块分配最短的 id
             new webpack.optimize.OccurrenceOrderPlugin(),
@@ -70,19 +49,7 @@ module.exports = function () {
                 return SFX_CONFIG.htmlPluginOptions.map(option => new HtmlWebpackPlugin(option));
             } ()),
 
-            ...(function () {
-                let plugins = [];
-                for (let key in SFX_CONFIG.thirdEntry) {
-                    if (SFX_CONFIG.thirdEntry.hasOwnProperty(key)) {
-                        plugins.push(new webpack.DllReferencePlugin({
-                            context: path.join(SFX_CONFIG.output.path, SFX_CONFIG.thirdDist),
-                            manifest: require(path.join(SFX_CONFIG.output.path, SFX_CONFIG.thirdDist, './' + key + '_manifest.json')),
-                            name: key
-                        }));
-                    }
-                }
-                return plugins;
-            } ()),
+
 
             // split vendor js into its own file
             new webpack.optimize.CommonsChunkPlugin({

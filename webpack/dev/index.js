@@ -3,7 +3,7 @@
  */
 
 require('shelljs/global');
-process.env.NODE_ENV = 'develop';
+process.env.NODE_ENV = 'development';
 
 let ora = require('ora');
 let webpack = require('webpack');
@@ -85,7 +85,7 @@ exports.run = () => {
             console.error(err);
             return;
         }
-        let uri = (SFX_CONFIG.dev.https ? 'https://' : 'http://') + (host || 'localhost') + ':' + port;
+        let uri = (SFX_CONFIG.dev.https ? 'https://' : 'http://') + (host || 'localhost') + ':' + port + SFX_CONFIG.output.publicPath;
         console.log('Listening at ' + uri + '\n');
         opn(uri);
     });

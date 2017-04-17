@@ -61,12 +61,12 @@ const LOADERS = [
         exclude: /node_modules/
     },
     {
-        test: /\.json$/,
-        loader: 'json'
+        test: /\.css$/,
+        loader: 'css-loader'
     },
     {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
-        loader: 'url',
+        loader: 'url-loader',
         query: {
             limit: 10000,
             name: 'static/img/[name].[hash:7].[ext]'
@@ -74,7 +74,7 @@ const LOADERS = [
     },
     {
         test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
-        loader: 'url',
+        loader: 'url-loader',
         query: {
             limit: 10000,
             name: 'static/fonts/[name].[hash:7].[ext]'
@@ -82,56 +82,82 @@ const LOADERS = [
     }
 ];
 
-let entry = {};
-const INJECT_CLIENT = path.join(__dirname, './dev/client');
-for (let key in SFX_CONFIG.entry) {
-    if (SFX_CONFIG.entry.hasOwnProperty(key)) {
-        let files = SFX_CONFIG.entry[key];
-        if (Array.isArray(files)) {
-            files = [
-                ...files
-            ];
-        } else {
-            files = [
-                files
-            ];
-        }
-        if (process.env.NODE_ENV === 'develop') {
-            files.unshift(INJECT_CLIENT);
-        }
-        entry[key] = files;
+function getLoaders () {
+    let sfxLoaders = SFX_CONFIG.loaders;
+    let loaders = LOADERS;
+    if (typeof sfxLoaders === 'function') {
+        loaders = sfxLoaders(process.env.NODE_ENV, loaders);
     }
+    return loaders;
+}
+
+function getEntry () {
+
+    let entry = {};
+    let sfxEntry = getSfxConfig('entry');
+    const INJECT_CLIENT = path.join(__dirname, './dev/client');
+
+    for (let key in sfxEntry) {
+        if (sfxEntry.hasOwnProperty(key)) {
+            let files = sfxEntry[key];
+            if (Array.isArray(files)) {
+                files = [
+                    ...files
+                ];
+            } else {
+                files = [
+                    files
+                ];
+            }
+
+            // 调试模式
+            if (process.env.NODE_ENV === 'develop') {
+                files.unshift(INJECT_CLIENT);
+            }
+            entry[key] = files;
+        }
+    }
+    return entry;
+}
+
+function getSfxConfig (key, defaultValue) {
+    let ret = defaultValue;
+    let sfxConfig = SFX_CONFIG[key];
+    if (typeof sfxConfig === 'function') {
+        ret = sfxConfig(process.env.NODE_ENV, defaultValue);
+    } else if (typeof sfxConfig !== 'undefined') {
+        ret = sfxConfig;
+    }
+    return ret;
 }
 
 module.exports = function () {
+
     return {
 
-        devtool: 'source-map',
+        devtool: getSfxConfig('sourceMap'),
 
-        entry: entry,
+        entry: getEntry(),
 
-        output: SFX_CONFIG.output || {},
+        output: getSfxConfig('output'),
 
-        externals: SFX_CONFIG.externals,
+        externals: getSfxConfig('externals'),
 
-        resolve: Object.assign({
+        resolve: getSfxConfig('resolve', {
             extensions: ['.jsx', '.js', '.vue'],
             // fallback: [path.join(PROJECT_ROOT, 'node_modules')],
             alias: {
                 'vue$': 'vue/dist/vue',
-                'src': path.join(PROJECT_ROOT, 'src'),
-                'assets': path.join(PROJECT_ROOT, 'src', 'assets')
+                'src': path.join(PROJECT_ROOT, 'src')
             }
-        }, SFX_CONFIG.resolve || {}),
+        }),
         
         // resolveLoader: {
         //     fallback: [path.join(PROJECT_ROOT, 'node_modules')]
         // },
 
         module: {
-
-            rules: LOADERS
-
+            rules: getLoaders()
         },
 
         plugins: [
@@ -157,7 +183,45 @@ module.exports = function () {
                     },
                     context: '/'
                 }
-            })
+            }),
+
+            new webpack.DefinePlugin({
+                'process.env': {
+                    NODE_ENV: `"${process.env.NODE_ENV}"`,
+                    version: `"${SFX_CONFIG.version}"`
+                }
+            }),
+
+            // 启用压缩
+            ...(function () {
+                if (SFX_CONFIG.uglify) {
+                    return [
+                        new webpack.optimize.UglifyJsPlugin({
+                            compress: {
+                                warnings: false
+                            }
+                        })
+                    ];
+                }
+                return [];
+            } ()),
+
+            ...(function () {
+                let plugins = [];
+                let sfxThirdEntry = getSfxConfig('thirdEntry');
+                if (sfxThirdEntry) {
+                    for (let key in sfxThirdEntry) {
+                        if (sfxThirdEntry.hasOwnProperty(key)) {
+                            plugins.push(new webpack.DllReferencePlugin({
+                                context: path.join(SFX_CONFIG.output.path, SFX_CONFIG.thirdDist),
+                                manifest: require(path.join(SFX_CONFIG.output.path, SFX_CONFIG.thirdDist, './' + key + '_manifest.json')),
+                                name: key
+                            }));
+                        }
+                    }
+                }
+                return plugins;
+            } ())
         ]
 
     };
