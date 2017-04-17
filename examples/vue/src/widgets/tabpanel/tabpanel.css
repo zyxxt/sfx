@@ -1,0 +1,78 @@
+.tabpanel-header{
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+}
+
+.tabpanel-item{
+    float: left;
+    list-style: none;
+    cursor: pointer;
+    padding: 0.4em 1em;
+    min-width: 120px;
+    line-height: 1.42857143;
+    border: none;
+    text-align: center;
+    background-color: #3c434b;
+    color: #fff;
+
+    -webkit-transition: none 0.25s ease-out;
+    -moz-transition: none 0.25s ease-out;
+    transition: none 0.25s ease-out;
+    -webkit-transition-property: background, color, border;
+    -moz-transition-property: background, color, border;
+    transition-property: background, color, border;
+}
+
+.tabpanel-item ~ .tabpanel-item{
+    margin-left: 10px;
+}
+.tabpanel-item:hover {
+    background-color: #17c1c5;
+    border-color: transparent;
+}
+
+.tabpanel-item.active{
+    background-color: #e8e9eb;
+    color: #18c1c6;
+}
+.tabpanel-item:disabled {
+    cursor: not-allowed;
+}
+.tabpanel-item:disabled:hover {
+    background-color: #3c434b;
+}
+
+.tabpanel-wrap{
+    /*margin-top: -1px;*/
+    /*padding: 20px;*/
+    /*border: 1px solid #666;*/
+    background-color: #e8e9eb;
+    min-height: 100px;
+
+}
+
+/*竖向排放*/
+.tabpanel.vertical{
+    overflow: hidden;
+}
+
+.tabpanel.vertical .tabpanel-header{
+    float: left;
+}
+
+.tabpanel.vertical .tabpanel-item{
+    display: block;
+    width: 100%;
+    float: none;
+    text-align: left;
+}
+
+.tabpanel.vertical .tabpanel-item ~ .tabpanel-item{
+    margin-left: 0;
+    margin-top: 0;
+}
+
+.tabpanel.vertical .tabpanel-wrap{
+    margin-top: 0;
+}

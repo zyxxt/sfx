@@ -1,0 +1,66 @@
+.tree {
+
+}
+.tree-cell {
+    padding: 0;
+    height: 24px;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tree-cell .tree-checkbox {
+    /*height: 24px;*/
+}
+
+.tree-cell .checkbox .checkbox-label {
+    margin: 0;
+}
+
+.tree-icon {
+    vertical-align: middle;
+}
+
+.table-auto-width .tree-cell {
+    width: auto !important;
+    overflow: visible;
+    text-overflow: inherit;
+}
+
+.tree-row .table-cell {
+    height: 24px;
+}
+
+.tree-placeholder {
+    display: inline-block;
+    vertical-align: middle;
+    width: 18px;
+    height: 24px;
+}
+
+
+.tree-elbow-end{
+    background:url("./img/elbow-end.gif") no-repeat center;
+}
+.tree-elbow-end-plus{
+    background:url("./img/elbow-end-plus.gif") no-repeat center;
+}
+.tree-elbow-end-minus{
+    background: url("./img/elbow-end-minus.gif") no-repeat center;
+}
+.tree-elbow{
+    background: url("./img/elbow.gif") no-repeat center;
+}
+.tree-elbow-plus{
+    background: url("./img/elbow-plus.gif") no-repeat center;
+}
+.tree-elbow-minus{
+    background: url("./img/elbow-minus.gif") no-repeat center;
+}
+.tree-elbow-line{
+    background:url("./img/elbow-line.gif") repeat-y center 0;
+}
+.tree-loading{
+    background: url("./img/loading.gif") no-repeat center;
+}

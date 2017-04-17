@@ -1,0 +1,294 @@
+
+.btn {
+    min-width: 100px;
+    height: 28px;
+    border: 1px solid #eee;
+    padding: 0 10px;
+    border-radius: 4px;
+    background-color: #fff;
+    color: #333;
+    font-size: 12px;
+    cursor: pointer;
+    -webkit-transition: none 0.25s ease-out;
+    -moz-transition: none 0.25s ease-out;
+    transition: none 0.25s ease-out;
+    -webkit-transition-property: background, color, border;
+    -moz-transition-property: background, color, border;
+    transition-property: background, color, border;
+}
+
+.btn-differ {
+    background-color: #234156;
+    color: #fff;
+    border-color: #234156;
+}
+
+.btn-primary {
+    background-color: #1ac575;
+    color: #fff;
+    border-color: #1ac575;
+}
+
+.btn-danger {
+    background-color: #ff6666;
+    color: #fff;
+    border-color: #ff6666;
+}
+
+.btn-blank {
+    min-width: 0;
+    font-size: 12px;
+    background-color: transparent;
+    border-color: transparent;
+    color: #000;
+}
+
+.btn-link {
+    min-width: 0;
+    font-size: 12px;
+    background-color: transparent;
+    border-color: transparent;
+    color: #000;
+}
+
+.btn-link-blue {
+    color: #337ab7!important;
+}
+
+.btn-link-hover-dark:hover {
+    color: #000!important;
+}
+
+.btn-link-wathet {
+    color: #17c1c5;
+}
+
+.btn-secondary {
+    border-color: #e5e5e5;
+    background-color: #e5e5e5;
+}
+
+.btn-load {
+    border-color: #17c1c5;
+    color: #17c1c5;
+    background-color: #fff;
+}
+
+.btn-circle {
+    min-width: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    padding: 0;
+    font-size: 16px;
+    background-color: #fff;
+    border-color: #fff;
+    color: #c7c7c7;
+}
+
+.btn:focus {
+    background-color: #fff;
+    color: #333;
+    border-color: #17c1c5;
+    outline: none!important;
+}
+
+.btn-differ:focus {
+    color: #fff;
+    background-color: #286090;
+    border-color: #122b40;
+}
+
+.btn-primary:focus {
+    border-color: #1ac575;
+    background-color: #a9e9cb;
+    color: #1ac575;
+}
+
+.btn-danger:focus {
+    background-color: #ff6666;
+    color: #fff;
+    border-color: #ff6666;
+}
+
+.btn-blank:focus {
+    background-color: transparent;
+    border-color: transparent;
+    color: #000;
+}
+
+.btn-link:focus {
+    background-color: transparent;
+    border-color: transparent;
+    color: #000;
+    text-decoration: underline;
+}
+
+.btn:hover {
+    background-color: #f8f8f8;
+    color: #17c1c5;
+    border-color: #f8f8f8;
+}
+
+.btn-differ:hover {
+    background-color: #93cbf1;
+    border-color: #93cbf1;
+    color: #114477;
+}
+
+.btn-primary:hover {
+    border-color: #a9e9cb;
+    background-color: #a9e9cb;
+    color: #1ac575;
+}
+
+.btn-secondary:hover {
+    background-color: #93cbf1;
+    border-color: #93cbf1;
+    color: #114477;
+}
+
+.btn-load:hover {
+    border-color: #17c1c5;
+    color: #fff;
+    background-color: #17c1c5;
+}
+
+.btn-danger:hover {
+    background-color: #ffcfcf;
+    color: #ff6969;
+    border-color: #ffcfcf;
+}
+
+.btn-blank:hover {
+    background-color: #17bec2;
+    border-color: #17bec2;
+    color: #fff;
+}
+
+.btn-link:hover {
+    background-color: transparent;
+    border-color: transparent;
+    color: #23527C;
+    cursor: pointer;
+}
+
+.btn-circle:hover {
+    border-color: #17c1c5;
+    background-color: #17c1c5;
+    color: #fff;
+}
+
+.btn:active,
+.btn:active:hover {
+    background-color: #3c434a;
+    color: #fff;
+    border-color: #3c434a;
+    box-shadow: none;
+}
+
+.btn-differ:active,
+.btn-differ:active:hover {
+    background-color: #3c434a;
+    color: #fff;
+    border-color: #3c434a;
+}
+
+.btn-danger:active,
+.btn-danger:active:hover {
+    background-color: #3c434a;
+    color: #fff;
+    border-color: #3c434a;
+}
+
+.btn-blank:active,
+.btn-blank:active:hover {
+    background-color: transparent;
+    border-color: transparent;
+    color: #000;
+}
+
+.btn-link:active,
+.btn-link:active:hover {
+    background-color: transparent;
+    border-color: transparent;
+    color: #000;
+}
+
+.btn[disabled],
+.btn[disabled]:hover,
+.btn[disabled]:active,
+.btn[disabled]:focus {
+    background-color: #e5e5e5;
+    color: #999;
+    border-color: #ccc;
+    cursor: not-allowed;
+    pointer-events: auto;
+}
+
+.btn-blank[disabled],
+.btn-blank[disabled]:hover,
+.btn-blank[disabled]:active,
+.btn-blank[disabled]:focus {
+    background-color: transparent;
+    border-color: transparent;
+}
+
+.btn-link[disabled],
+.btn-link[disabled]:hover,
+.btn-link[disabled]:active,
+.btn-link[disabled]:focus {
+    background-color: transparent;
+    border-color: transparent;
+}
+
+.btn-circle[disabled],
+.btn-circle[disabled]:hover,
+.btn-circle[disabled]:active,
+.btn-circle[disabled]:focus {
+    border-color: #e5e5e5;
+}
+
+.btn-secondary[disabled],
+.btn-secondary[disabled]:hover,
+.btn-secondary[disabled]:active,
+.btn-secondary[disabled]:focus {
+    border-color: #e5e5e5;
+}
+
+.btn-small {
+    min-width: 60px;
+    height: 22px;
+    font-size: 12px;
+}
+
+.btn-large {
+    min-width: 128px;
+    height: 34px;
+    font-size: 14px;
+}
+
+.btn-small.btn-circle {
+    min-width: 0;
+    width: 22px;
+}
+
+.btn-large.btn-circle {
+    min-width: 0;
+    font-size: 16px;
+}
+
+.btn .fa {
+    margin-right: 4px;
+}
+
+.btn-icon-only .fa {
+    line-height: 1;
+    margin-right: 0;
+}
+
+.btn-circle .fa {
+    font-size: inherit;
+    margin-right: 0;
+}
+

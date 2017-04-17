@@ -1,0 +1,81 @@
+.sf-notify-wrap {
+    position: fixed;
+    width: 280px;
+    left: 50%;
+    top: 20px;
+    z-index: 99999;
+    margin-left: -150px;
+}
+
+.sf-notify {
+    width: 100%;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    padding: 10px 20px;
+    font-size: 12px;
+    position: relative;
+}
+
+.sf-notify .notify-msg {
+    display: inline-block;
+    width: calc(100% - 30px);
+    line-height: 20px;
+}
+
+.sf-notify i.icon-close {
+    display: none;
+    position: absolute;
+    right: 12px;
+    top: 10px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.sf-notify:hover i.icon-close {
+    display: inline-block;
+}
+
+.sf-notify i.icon-desc {
+    margin-right: 5px;
+    vertical-align: top;
+    font-size: 14px;
+}
+
+.sf-notify-ok {
+    background: #65CB54;
+    color: #fff;
+}
+
+.sf-notify-fail {
+    background: #F0DBDB;
+    color: #A94442;
+}
+
+.sf-notify-warn {
+    background: #FCF8E3;
+    color: #665131;
+}
+
+.sf-notify-ok i.fa {
+    color: #fff;
+}
+
+.sf-notify-fail i.fa {
+    color: #A94442;
+}
+
+.sf-notify-warn i.fa {
+    color: #665131;
+}
+
+.notify-fade-enter-active {
+    transition: all .3s ease;
+}
+
+.notify-fade-leave-active {
+    transition: all .3s ease;
+}
+
+.notify-fade-enter, .notify-fade-leave-active {
+    opacity: 0;
+}

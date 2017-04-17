@@ -1,0 +1,161 @@
+beforeColor = #000;
+afterColor = #000;
+arrowOffset = 6px;
+centerOffset = calc(50% - arrowOffset);
+beforeOffset = -13px;
+afterOffset = -12px;
+
+.layer.tooltip
+    .layer-arrow:before,.layer-arrow:after
+        content: '';
+        position: absolute;
+        display: block;
+        width: 0;
+        height: 0;
+        border-color: transparent;
+        border-style: solid;
+        border-width: 6px;
+
+    &[x-placement="top-start"]
+        .layer-arrow
+            &:before
+                border-top-color: beforeColor;
+                bottom: beforeOffset;
+                left: arrowOffset;
+
+            &:after
+                border-top-color: afterColor;
+                bottom: afterOffset;
+                left: arrowOffset;
+
+    &[x-placement="top"]
+        .layer-arrow
+            &:before
+                border-top-color: beforeColor;
+                bottom: beforeOffset;
+                left: centerOffset;
+
+            &:after
+                border-top-color: afterColor;
+                bottom: afterOffset;
+                left: centerOffset;
+
+    &[x-placement="top-end"]
+        .layer-arrow
+            &:before
+                border-top-color: beforeColor;
+                bottom: beforeOffset;
+                right: arrowOffset;
+
+            &:after
+                border-top-color: afterColor;
+                bottom: afterOffset;
+                right: arrowOffset;
+
+    &[x-placement="bottom-start"]
+        .layer-arrow
+            &:before
+                border-bottom-color: beforeColor;
+                top: beforeOffset;
+                left: arrowOffset;
+
+            &:after
+                border-bottom-color: afterColor;
+                top: afterOffset;
+                left: arrowOffset;
+
+    &[x-placement="bottom"]
+        .layer-arrow
+            &:before
+                border-bottom-color: beforeColor;
+                top: beforeOffset;
+                left: centerOffset;
+
+            &:after
+                border-bottom-color: afterColor;
+                top: afterOffset;
+                left: centerOffset;
+
+    &[x-placement="bottom-end"]
+        .layer-arrow
+            &:before
+                border-bottom-color: beforeColor;
+                top: beforeOffset;
+                right: arrowOffset;
+
+            &:after
+                border-bottom-color: afterColor;
+                top: afterOffset;
+                right: arrowOffset;
+
+    &[x-placement="left-start"]
+        .layer-arrow
+            &:before
+                border-left-color: beforeColor;
+                right: beforeOffset;
+                top: arrowOffset;
+
+            &:after
+                border-left-color: afterColor;
+                right: afterOffset;
+                top: arrowOffset;
+
+    &[x-placement="left"]
+        .layer-arrow
+            &:before
+                border-left-color: beforeColor;
+                right: beforeOffset;
+                top: centerOffset;
+
+            &:after
+                border-left-color: afterColor;
+                right: afterOffset;
+                top: centerOffset;
+
+    &[x-placement="left-end"]
+        .layer-arrow
+            &:before
+                border-left-color: beforeColor;
+                right: beforeOffset;
+                bottom: arrowOffset;
+
+            &:after
+                border-left-color: afterColor;
+                right: afterOffset;
+                bottom: arrowOffset;
+
+    &[x-placement="right-start"]
+        .layer-arrow
+            &:before
+                border-right-color: beforeColor;
+                left: beforeOffset;
+                top: arrowOffset;
+
+            &:after
+                border-right-color: afterColor;
+                left: afterOffset;
+                top: arrowOffset;
+
+    &[x-placement="right"]
+        .layer-arrow
+            &:before
+                border-right-color: beforeColor;
+                left: beforeOffset;
+                top: centerOffset;
+
+            &:after
+                border-right-color: afterColor;
+                left: afterOffset;
+                top: centerOffset;
+
+    &[x-placement="right-end"]
+        .layer-arrow
+            &:before
+                border-right-color: beforeColor;
+                left: beforeOffset;
+                bottom: arrowOffset;
+
+            &:after
+                border-right-color: afterColor;
+                left: afterOffset;
+                bottom: arrowOffset;

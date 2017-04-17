@@ -1,0 +1,25 @@
+
+.echart-tooltip-wrap .echart-tooltip-title {
+    border-bottom: solid 1px #0C5B5F;
+    margin: 0;
+    padding: 8px 12px;
+    font-size: 14px;
+    text-align: center;
+    color: #18C1C6;
+}
+
+.echart-tooltip-wrap .echart-tooltip-body {
+    padding: 8px 12px;
+    /*max-height: 20px;*/
+    overflow: auto;
+}
+
+.echart-tooltip-wrap .echart-tooltip-body .item-status-low {
+    color: #999;
+}
+.echart-tooltip-wrap .echart-tooltip-body .item-status-middle {
+    color: #EECC22;
+}
+.echart-tooltip-wrap .echart-tooltip-body .item-status-low {
+    color: #17D87F;
+}

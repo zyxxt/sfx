@@ -1,0 +1,28 @@
+.sf-msgbox {
+    padding: 30px 20px 20px 85px;
+    height: 100%;
+    min-height: 100px;
+    font-size: 14px;
+    line-height: 150%;
+    color: #3c434a;
+    background-repeat: no-repeat;
+    background-position-y: 20px;
+    margin: 0 20px;
+}
+
+
+.sf-msgbox-error {
+    background-image: url('./img/error.png');
+}
+.sf-msgbox-success {
+    background-image: url('./img/success.png');
+}
+.sf-msgbox-warn {
+    background-image: url('./img/warn.png');
+}
+.sf-msgbox-info {
+    background-image: url('./img/info.png');
+}
+.sf-msgbox-question {
+    background-image: url('./img/question.png');
+}
