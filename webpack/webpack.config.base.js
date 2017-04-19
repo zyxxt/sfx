@@ -4,8 +4,12 @@
 
 let path = require('path');
 let webpack = require('webpack');
+let ExtractTextPlugin = require('extract-text-webpack-plugin');
+let HtmlWebpackPlugin = require('html-webpack-plugin');
 let cssLoaders = require('./loader/css_loaders');
+
 const SFX_CONFIG = require('../lib/config');
+let getSfxConfig = require('../lib/getSfxConfig');
 const PROJECT_ROOT = process.cwd();
 
 let eslintConfig = require('../eslint/lint');
@@ -120,18 +124,7 @@ function getEntry () {
     return entry;
 }
 
-function getSfxConfig (key, defaultValue) {
-    let ret = defaultValue;
-    let sfxConfig = SFX_CONFIG[key];
-    if (typeof sfxConfig === 'function') {
-        ret = sfxConfig(process.env.NODE_ENV, defaultValue);
-    } else if (typeof sfxConfig !== 'undefined') {
-        ret = sfxConfig;
-    }
-    return ret;
-}
-
-module.exports = function () {
+module.exports = function (type) {
 
     return {
 
@@ -192,6 +185,22 @@ module.exports = function () {
                 }
             }),
 
+            // 给使用频率最高的模块分配最短的 id
+            new webpack.optimize.OccurrenceOrderPlugin(),
+
+            // 去掉重复的代码
+            // new webpack.optimize.DedupePlugin(),
+
+            // 把css单独生成文件
+            new ExtractTextPlugin(path.join(SFX_CONFIG.output.path, SFX_CONFIG.staticDirectory, '/css/[name].css')),
+
+            ...(function () {
+                if (!Array.isArray(SFX_CONFIG.htmlPluginOptions)) {
+                    return [];
+                }
+                return SFX_CONFIG.htmlPluginOptions.map(option => new HtmlWebpackPlugin(option));
+            } ()),
+
             // 启用压缩
             ...(function () {
                 if (SFX_CONFIG.uglify) {
@@ -207,6 +216,9 @@ module.exports = function () {
             } ()),
 
             ...(function () {
+                if (type === '3parts') {
+                    return [];
+                }
                 let plugins = [];
                 let sfxThirdEntry = getSfxConfig('thirdEntry');
                 if (sfxThirdEntry) {

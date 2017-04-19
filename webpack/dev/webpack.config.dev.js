@@ -5,12 +5,11 @@
 let merge = require('webpack-merge');
 let webpack = require('webpack');
 let path = require('path');
-let ExtractTextPlugin = require('extract-text-webpack-plugin');
-let HtmlWebpackPlugin = require('html-webpack-plugin');
 
-let SFX_CONFIG = require('../../lib/config');
+let getSfxConfig = require('../../lib/getSfxConfig');
+const PROJECT_ROOT = process.cwd();
 
-let baseWebpackConfig = require('./../webpack.config.base.js')();
+let baseWebpackConfig = require('./../webpack.config.base.js')('dev');
 let styleLoaders = require('./../loader/style_loaders');
 
 module.exports = function () {
@@ -20,7 +19,7 @@ module.exports = function () {
         ].concat(baseWebpackConfig.entry[name])
     });
     
-    return merge(baseWebpackConfig, {
+    let config = merge(baseWebpackConfig, {
 
         module: {
             loaders: styleLoaders({
@@ -30,27 +29,8 @@ module.exports = function () {
 
         plugins: [
 
-
-            // 给使用频率最高的模块分配最短的 id
-            new webpack.optimize.OccurrenceOrderPlugin(),
-
             new webpack.HotModuleReplacementPlugin(),
-
-            // 去掉重复的代码
-            // new webpack.optimize.DedupePlugin(),
-
-            // 把css单独生成文件
-            new ExtractTextPlugin('static/css/[name].css'),
-
-            ...(function () {
-                if (!Array.isArray(SFX_CONFIG.htmlPluginOptions)) {
-                    return [];
-                }
-                return SFX_CONFIG.htmlPluginOptions.map(option => new HtmlWebpackPlugin(option));
-            } ()),
-
-
-
+            
             // split vendor js into its own file
             new webpack.optimize.CommonsChunkPlugin({
                 name: 'vendor',
@@ -59,7 +39,7 @@ module.exports = function () {
                     // any required modules inside node_modules are extracted to vendor
                     return (
                         module.resource && /\.js$/.test(module.resource) && module.resource.indexOf(
-                            path.join(__dirname, '../node_modules')
+                            path.join(PROJECT_ROOT, 'node_modules')
                         ) === 0
                     )
                 }
@@ -70,12 +50,13 @@ module.exports = function () {
             new webpack.optimize.CommonsChunkPlugin({
                 name: 'manifest',
                 chunks: ['vendor']
-            }),
-
-            // 其它插件扩展
-            ...(SFX_CONFIG.plugins || [])
-
+            })
         ]
     });
+
+    config.plugins = getSfxConfig('plugins', config.plugins);
+
+    return config;
+
 };
 

@@ -3,6 +3,7 @@
  */
 
 require('shelljs/global');
+
 process.env.NODE_ENV = 'development';
 
 let ora = require('ora');
@@ -18,6 +19,8 @@ let opn = require('opn');
 
 let SFX_CONFIG = require('../../lib/config');
 let webpackConfig = require('./webpack.config.dev.js');
+
+const PROJECT_ROOT = process.cwd();
 
 function createServer (app) {
     let server;
@@ -70,10 +73,15 @@ function createApp () {
     let thirdPartsPath = path.posix.join(SFX_CONFIG.output.publicPath, SFX_CONFIG.thirdDist);
     app.use(thirdPartsPath, express.static(path.resolve(SFX_CONFIG.output.path, SFX_CONFIG.thirdDist)));
 
+    // 静态资源目录
+    if (SFX_CONFIG.staticDirectory) {
+        let staticPath = path.posix.join(SFX_CONFIG.output.publicPath, SFX_CONFIG.staticDirectory);
+        app.use(staticPath, express.static(path.resolve(PROJECT_ROOT, SFX_CONFIG.staticDirectory)));
+    }
+    
+
     return app;
 }
-
-
 
 exports.run = () => {
     let app = createApp();
@@ -87,7 +95,7 @@ exports.run = () => {
         }
         let uri = (SFX_CONFIG.dev.https ? 'https://' : 'http://') + (host || 'localhost') + ':' + port + SFX_CONFIG.output.publicPath;
         console.log('Listening at ' + uri + '\n');
-        opn(uri);
+        // opn(uri);
     });
 
 };

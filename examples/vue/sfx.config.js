@@ -4,8 +4,6 @@
 
 let path = require('path');
 
-require('highcharts');
-
 // build时生成的目录
 const ASSETS_ROOT = path.resolve(__dirname, './dist');
 
@@ -14,6 +12,8 @@ const STATIC_DIRECTORY = 'static';
 
 // 第三方框架代码放到公共目录
 const THIRD_DIRECTORY = '3parts';
+
+const NODE_ENV = process.env.NODE_ENV;
 
 module.exports = {
 
@@ -39,7 +39,7 @@ module.exports = {
     entry (nodeEnv) {
         if (nodeEnv === 'development') {
             return {
-                app: [
+                example: [
                     './examples/index.js'
                 ]
             };
@@ -63,10 +63,25 @@ module.exports = {
     // 第三方代码单独打包
     thirdEntry: {
         vueAll: [
-            'vue'
+            'vue',
+            'vuex',
+            'vue-resource',
+            'vue-router'
+        ],
+        chartAll: [
+            'echarts',
+            'highcharts'
+        ],
+        babelRuntime: [
+            'babel-polyfill',
+            'core-js'/*,
+            './node_modules/css-loader/lib/css-base.js',
+            './node_modules/vue-style-loader/addStyles.js'*/
         ]
     },
     thirdDist: THIRD_DIRECTORY,
+
+    staticDirectory: STATIC_DIRECTORY,
 
     // webpack 输出配置
     output: {
@@ -78,10 +93,13 @@ module.exports = {
         publicPath: '/',
 
         // 合并后生成的JS的文件全名格式
-        filename: `${STATIC_DIRECTORY}/js/[name].[hash].js`,
+        filename: NODE_ENV === 'production' ? `${STATIC_DIRECTORY}/js/[name].js` : `${STATIC_DIRECTORY}/js/[name].[hash].js`,
 
         // chunk文件的命名格式
-        chunkFilename: `${STATIC_DIRECTORY}/js/[name].[hash].js`
+        chunkFilename: NODE_ENV === 'production' ? `${STATIC_DIRECTORY}/js/[name].js` : `${STATIC_DIRECTORY}/js/[name].[hash].js`,
+
+        libraryTarget: NODE_ENV === 'production' ? 'umd' : undefined,
+        library: NODE_ENV === 'production' ? 'SFVueComponent' : undefined
     },
 
     externals (nodeEnv) {
@@ -126,6 +144,21 @@ module.exports = {
             chunksSortMode: 'dependency'
         }
     ],
+
+    plugins (nodeEnv, plugins, sfxModulesPath) {
+        let webpack = require(path.resolve(sfxModulesPath, 'webpack'));
+        let HtmlWebpackPlugin = require(path.resolve(sfxModulesPath, 'html-webpack-plugin'));
+
+        if (nodeEnv === 'production') {
+            for (let index = 0; index < plugins.length; index++) {
+                if (plugins[index] instanceof webpack.optimize.CommonsChunkPlugin || plugins[index] instanceof HtmlWebpackPlugin) {
+                    plugins.splice(index, 1);
+                    index--;
+                }
+            }
+        }
+        return plugins;
+    },
 
     dev: {
 

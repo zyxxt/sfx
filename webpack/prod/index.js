@@ -2,11 +2,13 @@
  * Created by zhangyuantao on 2017/3/7.
  */
 
+var path = require('path');
 require('shelljs/global');
 process.env.NODE_ENV = 'production';
 
 let ora = require('ora');
 let webpack = require('webpack');
+const SFX_CONFIG = require('../../lib/config');
 let webpackConfig = require('./webpack.config.prod.js');
 
 exports.run = () => {
@@ -19,6 +21,12 @@ exports.run = () => {
 
     let spinner = ora('building for production...');
     spinner.start();
+
+    // 拷贝静态资源目录
+    var assetsPath = path.join(SFX_CONFIG.output.path, SFX_CONFIG.staticDirectory);
+    rm('-rf', assetsPath);
+    mkdir('-p', assetsPath);
+    cp('-R', 'static/*', assetsPath);
 
     webpack(webpackConfig(), function (err, stats) {
         spinner.stop();

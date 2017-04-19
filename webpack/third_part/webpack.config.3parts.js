@@ -7,16 +7,17 @@ let webpack = require('webpack');
 let path = require('path');
 
 let SFX_CONFIG = require('../../lib/config');
-let baseWebpackConfig = require('./../webpack.config.base.js')();
+let baseWebpackConfig = require('./../webpack.config.base.js')('3parts');
 
 let ExtractTextPlugin = require('extract-text-webpack-plugin');
+let HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = function () {
 
     baseWebpackConfig.entry = null;
     baseWebpackConfig.output = null;
 
-    return merge(baseWebpackConfig, {
+    let config = merge(baseWebpackConfig, {
 
         entry: SFX_CONFIG.thirdEntry,
 
@@ -66,5 +67,16 @@ module.exports = function () {
             })
         ]
     });
+
+    // 下面这块字段只在业务中使用
+    delete config.externals;
+    for (let index = 0; index < config.plugins.length; index++) {
+        if (config.plugins[index] instanceof HtmlWebpackPlugin || config.plugins[index] instanceof webpack.DllReferencePlugin) {
+            config.plugins.splice(index, 1);
+            index--;
+        }
+    }
+
+    return config;
 };
 
