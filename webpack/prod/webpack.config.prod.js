@@ -10,16 +10,9 @@ let getSfxConfig = require('../../lib/getSfxConfig');
 const PROJECT_ROOT = process.cwd();
 
 let baseWebpackConfig = require('./../webpack.config.base.js')('prod');
-let styleLoaders = require('./../loader/style_loaders');
 
 module.exports = function () {
     let config = merge(baseWebpackConfig, {
-
-        module: {
-            loaders: styleLoaders({
-                sourceMap: true
-            })
-        },
 
         plugins: [
 

@@ -7,6 +7,7 @@ let webpack = require('webpack');
 let ExtractTextPlugin = require('extract-text-webpack-plugin');
 let HtmlWebpackPlugin = require('html-webpack-plugin');
 let cssLoaders = require('./loader/css_loaders');
+let styleLoaders = require('./loader/style_loaders');
 
 const SFX_CONFIG = require('../lib/config');
 let getSfxConfig = require('../lib/getSfxConfig');
@@ -47,15 +48,16 @@ const LOADERS = [
         loader: 'vue-loader',
         options: {
             autoprefixer: true,
-            loaders: cssLoaders({
-                sourceMap: true
-            }),
             postcss: [
                 //require('autoprefixer')({
                 //    browsers: ['last 2 versions']
                 //}),
                 require('postcss-cssnext')()
-            ]
+            ],
+            loaders: cssLoaders({
+                sourceMap: SFX_CONFIG.sourceMap,
+                extract: true
+            })
         }
     },
     {
@@ -64,10 +66,12 @@ const LOADERS = [
         include: PROJECT_ROOT,
         exclude: /node_modules/
     },
-    {
-        test: /\.css$/,
-        loader: 'css-loader'
-    },
+
+    ...styleLoaders({
+        sourceMap: SFX_CONFIG.sourceMap,
+        extract: true
+    }),
+
     {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         loader: 'url-loader',
@@ -192,7 +196,7 @@ module.exports = function (type) {
             // new webpack.optimize.DedupePlugin(),
 
             // 把css单独生成文件
-            new ExtractTextPlugin(path.join(SFX_CONFIG.output.path, SFX_CONFIG.staticDirectory, '/css/[name].css')),
+            new ExtractTextPlugin(path.join(SFX_CONFIG.staticDirectory, '/css/[name].css')),
 
             ...(function () {
                 if (!Array.isArray(SFX_CONFIG.htmlPluginOptions)) {

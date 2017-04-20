@@ -2,7 +2,7 @@
  * Created by zhangyuantao on 2017/3/6.
  */
 
-let cssLoaders = require('./css_loaders')
+let cssLoaders = require('./css_loaders');
 
 module.exports = function (options) {
     let output = [];

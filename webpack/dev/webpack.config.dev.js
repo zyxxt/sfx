@@ -21,12 +21,6 @@ module.exports = function () {
     
     let config = merge(baseWebpackConfig, {
 
-        module: {
-            loaders: styleLoaders({
-                sourceMap: true
-            })
-        },
-
         plugins: [
 
             new webpack.HotModuleReplacementPlugin(),
