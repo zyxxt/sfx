@@ -35,10 +35,10 @@ function createServer (app) {
     return server;
 }
 
-function createApp () {
+function createApp (webpackConfig) {
 
     let app = express();
-    let compiler = webpack(webpackConfig());
+    let compiler = webpack(webpackConfig);
 
     let devMiddleware = require('webpack-dev-middleware')(compiler, {
         publicPath: SFX_CONFIG.output.publicPath,
@@ -83,8 +83,8 @@ function createApp () {
     return app;
 }
 
-exports.run = () => {
-    let app = createApp();
+function run (webpackConfig) {
+    let app = createApp(webpackConfig);
     let server = createServer(app);
     let host = SFX_CONFIG.dev.host;
     let port = SFX_CONFIG.dev.port;
@@ -96,6 +96,25 @@ exports.run = () => {
         let uri = (SFX_CONFIG.dev.https ? 'https://' : 'http://') + (host || 'localhost') + ':' + port + SFX_CONFIG.output.publicPath;
         console.log('Listening at ' + uri + '\n');
         // opn(uri);
+
+        if (typeof SFX_CONFIG.dev.afterCreateServer === 'function') {
+            SFX_CONFIG.dev.afterCreateServer(server, app);
+        }
     });
+}
+
+exports.run = () => {
+    let config = webpackConfig();
+    if (typeof SFX_CONFIG.dev.beforeCreateServer === 'function') {
+        Promise.reslove(SFX_CONFIG.dev.beforeCreateServer(config))
+            .then(config => {
+                run(config);
+            })
+            .catch(() => {
+                run(config);
+            });
+    } else {
+        run(config);
+    }
 
 };

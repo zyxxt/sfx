@@ -9,9 +9,9 @@ let HtmlWebpackPlugin = require('html-webpack-plugin');
 let cssLoaders = require('./loader/css_loaders');
 let styleLoaders = require('./loader/style_loaders');
 
+const PROJECT_ROOT = process.cwd();
 const SFX_CONFIG = require('../lib/config');
 let getSfxConfig = require('../lib/getSfxConfig');
-const PROJECT_ROOT = process.cwd();
 
 let eslintConfig = require('../eslint/lint');
 

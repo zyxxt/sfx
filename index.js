@@ -2,6 +2,8 @@
  * Created by zhangyuantao on 2017/2/26.
  */
 
+require('./util/logger');
+
 const ESLINT_PATH = './eslint/lint';
 const WEBPACK_THIRD_PATH = './webpack/third_part';
 const WEBPACK_PRODUCTION = './webpack/prod';

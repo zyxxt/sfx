@@ -141,7 +141,14 @@ module.exports = {
                 collapseWhitespace: false,
                 removeAttributeQuotes: false
             },
-            chunksSortMode: 'dependency'
+            chunksSortMode: 'dependency',
+
+            // 这块可注入到HTML文件中，形式如："<%= htmlWebpackPlugin.options.data.rakKey %>", "<%= htmlWebpackPlugin.options.data.NODE_ENV %>"
+            // 只会全词匹配替换HTML文件中的，js变量则要通过 webpack.DefinePlugin 处理，可参考plugins配置
+            data: {
+                rsaKey: 'test',
+                NODE_ENV: NODE_ENV
+            }
         }
     ],
 
@@ -163,13 +170,49 @@ module.exports = {
     dev: {
 
         host: '',
+
         port: 8090,
+
         https: false,
 
-        beforeCreateServer () {
+        // 测试数据存放目录
+        mockDirectory: 'mock',
+
+        // URL 跟本地路径的对应关系，有内置类型：ac af hci acdc bbc，也可以自定义函数实现，返回一个真实的本地文件即可
+        // mockMapping: 'ac',
+        mockMapping (options) {
+
+        },
+
+        proxyTable: {
+            '/bbc': {
+                // 目标地址，比如 http://localhost/bbc => https://1.1.1.1/bbc
+                target: 'http://1.1.1.1',
+
+                // 关闭证书错误提醒
+                secure: false,
+
+                // 日志提示
+                logLevel: 'debug',
+                
+                // 发送到目标服务器时添加自定义头部
+                headers: {
+                    host: '1.1.1.1'
+                },
+
+                // proxy 定制，转发到目标服务器前可以hook到本地json
+                onProxyReq: undefined,
+
+                // 代理数据返回时触发，可以修改后台返回的数据，比如统一添加http头部等
+                onProxyRes: undefined
+            }
+        },
+
+        // 勾子，本地服务器开启时，可以再次修改webpack中的配置项
+        beforeCreateServer (webpackConfig) {
             return new Promise(function (resolve, reject) {
                 setTimeout(() => {
-                    resolve();
+                    resolve(webpackConfig);
                 }, 3000);
             });
         },
