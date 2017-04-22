@@ -12,8 +12,11 @@ commander
     .usage('<command>')
     .description(`
         For Example:
-            sfx init framework
-        
+            sfx init vue | ac | hci
+            sfx eslint
+            sfx build
+            sfx dev
+            sfx test
     `);
 
 commander
