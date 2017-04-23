@@ -2,9 +2,9 @@
  * Created by ued on 2017/4/22.
  */
 
-let console = require('log4js')('proxy_table');
+let console = require('log4js').getLogger('proxy_table');
 const PROJECT_ROOT = process.cwd();
-const SFX_CONFIG = require('../lib/config');
+const SFX_CONFIG = require('../../../lib/config');
 const MOCK_DIRECTORY = SFX_CONFIG.dev.mockDirectory || 'mock';
 const INSIDE_MAPPING = {
     hci: hci,

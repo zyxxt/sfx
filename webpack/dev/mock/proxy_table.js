@@ -3,8 +3,8 @@
  */
 
 let hook = require('./hook');
-let console = require('log4js')('proxy_table');
-const SFX_CONFIG = require('../lib/config');
+let console = require('log4js').getLogger('proxy_table');
+const SFX_CONFIG = require('../../../lib/config');
 
 function onProxyReq (proxyReq, req, res, options) {
     console.log(`[Proxy Request] ${proxyReq.method}: ${proxyReq.path}`);
@@ -28,6 +28,9 @@ module.exports = () => {
             break;
         }
         table[cgiPath] = Object.assign({
+
+            // 目标地址，比如 http://localhost/cgiPath => https://1.1.1.1/cgiPath
+            target: 'http://1.1.1.1',
 
             // 关闭证书错误提醒
             secure: false,

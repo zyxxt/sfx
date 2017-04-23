@@ -19,6 +19,8 @@ let opn = require('opn');
 
 let SFX_CONFIG = require('../../lib/config');
 let webpackConfig = require('./webpack.config.dev.js');
+let mockMiddleware = require('./mock/proxy_middleware');
+let mockProxyTable = require('./mock/proxy_table');
 
 const PROJECT_ROOT = process.cwd();
 
@@ -38,7 +40,18 @@ function createServer (app) {
 function createApp (webpackConfig) {
 
     let app = express();
-    let compiler = webpack(webpackConfig);
+    let compiler = webpack(webpackConfig, function (err, stats) {
+        if (err) {
+            throw err;
+        }
+        process.stdout.write(stats.toString({
+                colors: true,
+                modules: false,
+                children: true,
+                chunks: false,
+                chunkModules: false
+            }) + '\n');
+    });
 
     let devMiddleware = require('webpack-dev-middleware')(compiler, {
         publicPath: SFX_CONFIG.output.publicPath,
@@ -57,7 +70,6 @@ function createApp (webpackConfig) {
         })
     });
 
-
     // handle fallback for HTML5 history API
     app.use(require('connect-history-api-fallback')());
 
@@ -67,6 +79,15 @@ function createApp (webpackConfig) {
     // enable hot-reload and state-preserving
     // compilation error display
     app.use(hotMiddleware);
+
+    // 代理转发
+    Object.keys(mockProxyTable).forEach(context => {
+        let options = mockProxyTable[context];
+        if (typeof options === 'string') {
+            options = { target: options }
+        }
+        app.use(mockMiddleware(context, options));
+    });
 
 
     // 第三方库代码
@@ -106,7 +127,7 @@ function run (webpackConfig) {
 exports.run = () => {
     let config = webpackConfig();
     if (typeof SFX_CONFIG.dev.beforeCreateServer === 'function') {
-        Promise.reslove(SFX_CONFIG.dev.beforeCreateServer(config))
+        Promise.resolve(SFX_CONFIG.dev.beforeCreateServer(config))
             .then(config => {
                 run(config);
             })

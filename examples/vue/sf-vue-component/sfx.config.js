@@ -35,6 +35,9 @@ module.exports = {
     // 是否启用压缩
     uglify: false,
 
+    // 保持原有的目录结构，会自动保留图片相关文件
+    keepStructure: false,
+
     // webpack 的入口配置
     entry (nodeEnv) {
         if (nodeEnv === 'development') {
@@ -179,10 +182,10 @@ module.exports = {
         mockDirectory: 'mock',
 
         // URL 跟本地路径的对应关系，有内置类型：ac af hci acdc bbc，也可以自定义函数实现，返回一个真实的本地文件即可
-        // mockMapping: 'ac',
-        mockMapping (options) {
-
-        },
+        mockMapping: 'ac',
+        // mockMapping (options) {
+        //
+        // },
 
         proxyTable: {
             '/bbc': {
@@ -194,7 +197,7 @@ module.exports = {
 
                 // 日志提示
                 logLevel: 'debug',
-                
+
                 // 发送到目标服务器时添加自定义头部
                 headers: {
                     host: '1.1.1.1'
@@ -211,9 +214,10 @@ module.exports = {
         // 勾子，本地服务器开启时，可以再次修改webpack中的配置项
         beforeCreateServer (webpackConfig) {
             return new Promise(function (resolve, reject) {
+                console.log('waiting...');
                 setTimeout(() => {
                     resolve(webpackConfig);
-                }, 3000);
+                }, 10);
             });
         },
 

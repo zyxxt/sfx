@@ -10,11 +10,11 @@ let getSfxConfig = require('../../lib/getSfxConfig');
 const PROJECT_ROOT = process.cwd();
 
 let baseWebpackConfig = require('./../webpack.config.base.js')('dev');
-let styleLoaders = require('./../loader/style_loaders');
 
 module.exports = function () {
     Object.keys(baseWebpackConfig.entry).forEach(function (name) {
         baseWebpackConfig.entry[name] = [
+            path.resolve(__dirname, './mock/inject'),
             path.resolve(__dirname, './client')
         ].concat(baseWebpackConfig.entry[name])
     });
