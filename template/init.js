@@ -7,13 +7,13 @@ let fs = require('fs');
 let path = require('path');
 let chalk = require('chalk');
 let co = require('co');
-
+let logger = require('log4js').getLogger('template');
 let underscoreTemplate = require('underscore.template');
 
 const PROJECT_ROOT = process.cwd();
 const JSON_SPACE_LENGTH = 4;
 const MATCH_LIST = [
-    /\.(js|json|css|html|md|vue)$/
+    /\.(jsx?|json|css|html|md|vue|ts)$/
 ];
 
 /**
@@ -22,13 +22,16 @@ const MATCH_LIST = [
  * @returns {boolean}   是否匹配成功
  */
 function fileMatched (file) {
-    let ignored = false;
+    let match = false;
+    if (/sfx\.config\.js$/.test(file)) {
+        return match;
+    }
     MATCH_LIST.forEach((reg) => {
         if (reg.test(file)) {
-            ignored = true;
+            match = true;
         }
     });
-    return ignored;
+    return match;
 }
 
 /**
@@ -39,7 +42,7 @@ function fileMatched (file) {
  */
 function _copy (src, dist, option) {
     if (!fs.existsSync(src)) {
-        console.log(`not found: ${src}`);
+        logger.error(`not found: ${src}`);
         return;
     }
     if (fs.statSync(src).isDirectory()) {
@@ -54,9 +57,10 @@ function _copy (src, dist, option) {
     } else {
         if (fileMatched(src)) {
             fs.writeFileSync(dist, underscoreTemplate(fs.readFileSync(src).toString(), option));
-            console.log(`${dist}. parsed`);
+            logger.info(`file: ${dist}. parsed`);
         } else {
             fs.writeFileSync(dist, fs.readFileSync(src));
+            logger.info(`file: ${dist}. copied`);
         }
     }
 }
@@ -77,7 +81,7 @@ function prompt (msg, defaultValue) {
         process.stdout.write(msg);
         process.stdin.setEncoding('utf8');
         process.stdin.once('data', function (val) {
-            done(val.trim() || defaultValue);
+            done(null, val.trim() || defaultValue);
         }).resume();
     };
 }
@@ -108,13 +112,6 @@ function *stdIn () {
 }
 
 /**
- * 显示欢迎提示
- */
-function welcome () {
-    console.log(chalk.green('\nwelcome to use sfx cli tool.\n\n'));
-}
-
-/**
  * 检测当前环境是否正常
  * 1、当前目录是否已经存在其它文件
  * 2、node, npm 版本是否OK
@@ -122,8 +119,8 @@ function welcome () {
  */
 function checkEnv () {
     if (fs.readdirSync(PROJECT_ROOT).length) {
-        console.error(chalk.red('  Error: current folder is not empty...'));
-        process.exit();
+        logger.error('current folder is not empty.');
+        process.exit(1);
     }
 }
 
@@ -132,11 +129,11 @@ function checkEnv () {
  * @param {Object} option
  */
 function copy (option) {
-    console.log('Copy and Parse template...');
+    logger.info('copy template...');
     let src = path.join(__dirname, option.templateName);
     let dist = path.join(PROJECT_ROOT, '/');
     _copy(src, dist, option);
-    console.log(chalk.green('Copy and Parse completed!\n\n'));
+    logger.info('copy completed!\n');
 }
 
 /**
@@ -145,14 +142,15 @@ function copy (option) {
  */
 function install () {
     return function (done) {
-        console.log('yarn install, it will take a lot of time, please wait ...');
+        logger.info('yarn install, it will take a lot of time, please wait ...');
         exec('yarn install', (err, stdout, stderr) => {
             console.log(stdout);
             console.error(chalk.red(stderr));
             if (err) {
                 console.error(chalk.red('Error: npm install error'));
+                process.exit(1);
             }
-            console.log(chalk.green('npm install completed!\n'));
+            logger.info('yarn install completed!\n');
             done(null, err);
         });
     };
@@ -164,31 +162,37 @@ function install () {
  */
 function build () {
     return function (done) {
-        console.log('sfx build ...');
+        logger.info('sfx build ...');
         exec('sfx build', (err, stdout, stderr) => {
             console.log(stdout);
             console.error(chalk.red(stderr));
             if (err) {
                 console.error(chalk.red('Error: sfx build error'));
+                process.exit(1);
             }
-            console.log(chalk.green('sfx build completed!\n'));
+            logger.info('sfx build completed!');
             done(null, err);
         });
     };
 }
 
-module.exports = templateName => {
-    welcome();
+exports.run = (templateName, opt) => {
     checkEnv();
 
     co(function * () {
-        let option = yield stdIn;
-        option.templatName = templateName;
+        let projectConfig = yield stdIn();
+        projectConfig.templateName = templateName;
 
-        copy(option);
-        yield install(option);
-        yield build(option);
+        copy(projectConfig);
+        if (opt && opt.install) {
+            yield install(projectConfig);
+        }
+        if (opt && opt.build) {
+            yield build(projectConfig);
+        }
         
         process.exit();
+    }).catch(err => {
+        console.error(err);
     });
 };

@@ -7,7 +7,7 @@ const PACKAGE_JSON = require('../package.json');
 
 require('../util/logger');
 
-console.log(`Welcome to sfx cli tool (version: ${PACKAGE_JSON.version}), use "sfx --help" show more options.
+console.log(`Welcome to use sfx cli tool (version: ${PACKAGE_JSON.version}), use "sfx --help" show more options.
 `);
 
 commander
@@ -21,16 +21,21 @@ commander
 
 commander
     .command('init <template>')
+    .option('-i, --install', 'auto run yarn install')
+    .option('-b, --build', 'auto run sfx build')
     .description('init folder like yeoman')
-    .action((...args) => {
-        sfx.init(...args);
+    .action((template, commander) => {
+        sfx.init(template, {
+            install: commander.install,
+            build: commander.build
+        });
     });
 
 commander
     .command('build')
     .description('build for production')
-    .action((...args) => {
-        sfx.build(...args);
+    .action(() => {
+        sfx.build();
     });
 
 commander

@@ -1,14 +1,4 @@
-(function webpackUniversalModuleDefinition(root, factory) {
-	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("vue"), require("babelRuntime"), require("echarts"), require("highcharts"), require("vueAll"));
-	else if(typeof define === 'function' && define.amd)
-		define(["vue", "babelRuntime", "echarts", "highcharts", "vueAll"], factory);
-	else if(typeof exports === 'object')
-		exports["SFVueComponent"] = factory(require("vue"), require("babelRuntime"), require("echarts"), require("highcharts"), require("vueAll"));
-	else
-		root["SFVueComponent"] = factory(root["Vue"], root["babelRuntime"], root["echarts"], root["highcharts"], root["vueAll"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_5__, __WEBPACK_EXTERNAL_MODULE_423__, __WEBPACK_EXTERNAL_MODULE_424__, __WEBPACK_EXTERNAL_MODULE_425__, __WEBPACK_EXTERNAL_MODULE_426__) {
-return /******/ (function(modules) { // webpackBootstrap
+/******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -361,7 +351,7 @@ exports.default = function (instance, Constructor) {
 /* 5 */
 /***/ (function(module, exports) {
 
-module.exports = __WEBPACK_EXTERNAL_MODULE_5__;
+module.exports = undefined;
 
 /***/ }),
 /* 6 */
@@ -22707,5 +22697,4 @@ module.exports = __webpack_require__(120);
 
 /***/ })
 /******/ ]);
-});
-//# sourceMappingURL=widgets.js.map
+//# sourceMappingURL=widgets.fea885013d66319648bc.js.map

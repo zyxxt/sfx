@@ -122,7 +122,7 @@ function run (webpackConfig) {
         let uri = (SFX_CONFIG.dev.https ? 'https://' : 'http://') + (host || 'localhost') + ':' + port + SFX_CONFIG.output.publicPath;
         logger.info('Listening at ' + uri + '\n');
 
-        if (SFX_CONFIG.dev.autoOpenBrowser) {
+        if (SFX_CONFIG.dev.autoOpenBrowser !== false) {
             opn(uri);
         }
 

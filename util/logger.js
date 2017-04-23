@@ -9,13 +9,6 @@ log4js.configure({
     appenders: [
         {
             "type": "console"
-        },
-        {
-            "type": "file",
-            "filename": "./sfx.log",
-            "maxLogSize": 20480,
-            "backups": 3,
-            "category": "abc"
         }
     ],
     replaceConsole: false

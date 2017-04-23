@@ -5,12 +5,14 @@
 require('./util/logger');
 
 const ESLINT_PATH = './eslint/lint';
+const TEMPLATE_INIT_PATH = './template/init';
 const WEBPACK_THIRD_PATH = './webpack/third_part';
 const WEBPACK_PRODUCTION = './webpack/prod';
 const WEBPACK_DEVELOPMENT = './webpack/dev';
 
-exports.init = function (template) {
-
+exports.init = function (template, option) {
+    let templateTask = require(TEMPLATE_INIT_PATH);
+    templateTask.run(template, option);
 };
 
 exports.build = function () {
