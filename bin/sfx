@@ -1,49 +1,52 @@
 #!/usr/bin/env node --harmony
 
 let commander = require('commander');
-let pad = require('pad');
+// let pad = require('pad');
 let sfx = require('../index');
+const PACKAGE_JSON = require('../package.json');
 
-const INIT_ACTION = [];
+require('../util/logger');
 
+console.log(`Welcome to sfx cli tool (version: ${PACKAGE_JSON.version}), use "sfx --help" show more options.
+`);
 
 commander
-    .version(require('../package.json').version)
-    .usage('<command>')
+    .version(PACKAGE_JSON.version)
+    .usage('<command> [options]')
+    .option('--nolint', 'remove eslint')
     .description(`
         For Example:
-            sfx init vue | ac | hci
-            sfx eslint
-            sfx build
-            sfx dev
-            sfx test
+            sfx init vue
     `);
 
 commander
-    .command('init <template>', 'init sfis | vue | react')
-    .action(name => {
-        commander.help();
-        process.exit(1);
+    .command('init <template>')
+    .description('init folder like yeoman')
+    .action((...args) => {
+        sfx.init(...args);
     });
 
 commander
     .command('build')
+    .description('build for production')
     .action((...args) => {
         sfx.build(...args);
     });
 
 commander
-    .command('dev')
-    .action((...args) => {
-        sfx.dev(...args);
+    .command('dev [address]')
+    .description('run a local server for debug')
+    .action(address => {
+        sfx.dev(address);
     });
 
 commander
-    .command('eslint')
-    .action((...args) => {
-        let argv = args.slice(0, -1);
-        sfx.eslint(...argv);
+    .command('eslint [files...]')
+    .description('run eslint')
+    .action((files) => {
+        sfx.eslint(files);
     });
 
 
 commander.parse(process.argv);
+

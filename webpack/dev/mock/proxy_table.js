@@ -3,19 +3,19 @@
  */
 
 let hook = require('./hook');
-let console = require('log4js').getLogger('proxy_table');
+let logger = require('log4js').getLogger('proxy_table');
 const SFX_CONFIG = require('../../../lib/config');
 
 function onProxyReq (proxyReq, req, res, options) {
-    console.log(`[Proxy Request] ${proxyReq.method}: ${proxyReq.path}`);
-    console.debug(`[Proxy Request] headers: ${JSON.stringify(proxyReq._headers, true, 4)}`);
+    logger.info(`onProxyReq: mock proxy matched. ${proxyReq.method}: ${proxyReq.path}`);
+    // console.debug(`[Proxy Request] headers: ${JSON.stringify(proxyReq._headers, true, 4)}`);
 
     hook(proxyReq, req, res, options);
 }
 
 function onProxyRes (proxyRes, req, res, options) {
-    console.log(`[Proxy Response] ${proxyRes.method}: ${proxyRes.path}`);
-    console.debug(`[Proxy Response] headers: ${JSON.stringify(proxyRes.headers, true, 4)}`);
+    logger.info(`[onProxyRes] ${proxyRes.method}: ${proxyRes.path}`);
+    // console.debug(`[Proxy Response] headers: ${JSON.stringify(proxyRes.headers, true, 4)}`);
 }
 
 module.exports = () => {
@@ -35,9 +35,6 @@ module.exports = () => {
             // 关闭证书错误提醒
             secure: false,
 
-            // 日志提示
-            logLevel: 'debug',
-
             // 发送到目标服务器时添加自定义头部
             headers: {
 
@@ -50,17 +47,19 @@ module.exports = () => {
             onProxyRes: undefined
 
         }, SFX_CONFIG.dev.proxyTable[cgiPath]);
-        
-        table[cgiPath].onProxyReq = function () {
-            onProxyReq();
-            if (typeof table[cgiPath].onProxyReq === 'function') {
-                table[cgiPath].onProxyReq();
+
+        let oldReqHook = table[cgiPath].onProxyReq;
+        table[cgiPath].onProxyReq = function (...args) {
+            onProxyReq(...args);
+            if (typeof oldReqHook === 'function') {
+                oldReqHook(...args);
             }
         };
-        table[cgiPath].onProxyRes = function () {
-            onProxyRes();
-            if (typeof table[cgiPath].onProxyRes === 'function') {
-                table[cgiPath].onProxyRes();
+        let oldResHook  = table[cgiPath].onProxyRes;
+        table[cgiPath].onProxyRes = function (...args) {
+            onProxyRes(...args);
+            if (typeof oldResHook === 'function') {
+                oldResHook(...args);
             }
         };
 

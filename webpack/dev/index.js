@@ -8,11 +8,13 @@ process.env.NODE_ENV = 'development';
 
 let ora = require('ora');
 let webpack = require('webpack');
+let logger = require('log4js').getLogger('dev');
 
 let fs = require('fs');
 let path = require('path');
 let http = require('http');
 let https = require('https');
+let url = require('url');
 
 let express = require('express');
 let opn = require('opn');
@@ -20,11 +22,12 @@ let opn = require('opn');
 let SFX_CONFIG = require('../../lib/config');
 let webpackConfig = require('./webpack.config.dev.js');
 let mockMiddleware = require('./mock/proxy_middleware');
-let mockProxyTable = require('./mock/proxy_table');
+let mockProxyTable = require('./mock/proxy_table')();
 
 const PROJECT_ROOT = process.cwd();
 
 function createServer (app) {
+    logger.info('create server');
     let server;
     if (SFX_CONFIG.https) {
         server = https.createServer({
@@ -38,9 +41,9 @@ function createServer (app) {
 }
 
 function createApp (webpackConfig) {
-
+    logger.info('create express app');
     let app = express();
-    let compiler = webpack(webpackConfig, function (err, stats) {
+    let compiler = webpack(webpackConfig/*, function (err, stats) {
         if (err) {
             throw err;
         }
@@ -51,7 +54,7 @@ function createApp (webpackConfig) {
                 chunks: false,
                 chunkModules: false
             }) + '\n');
-    });
+    }*/);
 
     let devMiddleware = require('webpack-dev-middleware')(compiler, {
         publicPath: SFX_CONFIG.output.publicPath,
@@ -81,11 +84,13 @@ function createApp (webpackConfig) {
     app.use(hotMiddleware);
 
     // 代理转发
+    logger.info('create mock proxy');
     Object.keys(mockProxyTable).forEach(context => {
         let options = mockProxyTable[context];
         if (typeof options === 'string') {
             options = { target: options }
         }
+        logger.info(`context: ${context}, target: ${options.target}`);
         app.use(mockMiddleware(context, options));
     });
 
@@ -111,12 +116,15 @@ function run (webpackConfig) {
     let port = SFX_CONFIG.dev.port;
     server.listen(port, host, function (err) {
         if (err) {
-            console.error(err);
+            logger.error(err);
             return;
         }
         let uri = (SFX_CONFIG.dev.https ? 'https://' : 'http://') + (host || 'localhost') + ':' + port + SFX_CONFIG.output.publicPath;
-        console.log('Listening at ' + uri + '\n');
-        // opn(uri);
+        logger.info('Listening at ' + uri + '\n');
+
+        if (SFX_CONFIG.dev.autoOpenBrowser) {
+            opn(uri);
+        }
 
         if (typeof SFX_CONFIG.dev.afterCreateServer === 'function') {
             SFX_CONFIG.dev.afterCreateServer(server, app);
@@ -124,14 +132,26 @@ function run (webpackConfig) {
     });
 }
 
-exports.run = () => {
+function prepareDevConfig (address) {
+    let option = url.parse(address);
+    SFX_CONFIG.dev.https = option.protocol === 'https';
+    SFX_CONFIG.dev.port = option.port;
+    SFX_CONFIG.output.publicPath = option.pathname;
+}
+
+exports.run = (address) => {
+    logger.info('start run dev server');
+    if (address) {
+        prepareDevConfig(address);
+    }
     let config = webpackConfig();
     if (typeof SFX_CONFIG.dev.beforeCreateServer === 'function') {
         Promise.resolve(SFX_CONFIG.dev.beforeCreateServer(config))
             .then(config => {
                 run(config);
             })
-            .catch(() => {
+            .catch((err) => {
+                logger.error(err);
                 run(config);
             });
     } else {

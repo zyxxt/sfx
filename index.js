@@ -22,14 +22,14 @@ exports.build = function () {
     });
 };
 
-exports.dev = function () {
+exports.dev = function (address) {
     let devTask = require(WEBPACK_DEVELOPMENT);
-    devTask.run();
+    devTask.run(address);
 };
 
-exports.eslint = function (...args) {
+exports.eslint = function (files) {
     let eslint = require(ESLINT_PATH);
-    eslint.run(...args);
+    eslint.run(files);
 
 };
 

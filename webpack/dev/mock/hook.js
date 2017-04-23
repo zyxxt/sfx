@@ -2,7 +2,10 @@
  * Created by ued on 2017/4/22.
  */
 
-let console = require('log4js').getLogger('proxy_table');
+let path = require('path');
+let fs = require('fs');
+let logger = require('log4js').getLogger('hook');
+
 const PROJECT_ROOT = process.cwd();
 const SFX_CONFIG = require('../../../lib/config');
 const MOCK_DIRECTORY = SFX_CONFIG.dev.mockDirectory || 'mock';
@@ -83,14 +86,16 @@ function mapPath (option) {
             insideMapping: INSIDE_MAPPING
         }));
     } else {
-        realPath = INSIDE_MAPPING[mockMapping] || ac(option);
+        realPath = INSIDE_MAPPING[mockMapping](option) || ac(option);
     }
-    return realPath
+    return realPath;
 }
 
 function getMockOptions (proxyOption) {
+    logger.debug('get mock options...');
     let realPath = mapPath(proxyOption);
     if (!realPath) {
+        logger.debug(`can not find local mock file: ${proxyOption.path}`);
         return {
             enable: false
         };
@@ -101,19 +106,21 @@ function getMockOptions (proxyOption) {
     let mockModule = require(realPath);
 
     if (!mockModule || typeof mockModule.mockData !== 'function') {
+        logger.debug(`can not find "mockData () {}" function in mock file`);
         return {
             enable: false
         };
     }
     return {
-        enable: typeof mockModule.check === 'function' ? !!mockModule.check(option) : true,
-        data: mockModule.mockData(option)
+        enable: typeof mockModule.check === 'function' ? !!mockModule.check(proxyOption) : true,
+        data: mockModule.mockData(proxyOption)
     };
 }
 
 module.exports = (proxyReq, req, res, options) => {
-    let data = new Buffer(0);
+    logger.info('waiting for req data');
 
+    let data = new Buffer(0);
     req.on('data', function (chunk) {
         data = Buffer.concat([data, chunk]);
     });
@@ -121,7 +128,7 @@ module.exports = (proxyReq, req, res, options) => {
     req.on('end', function () {
 
         // 前端请求的数据内容
-        console.debug(`[Request] data: ${data.toString()}`);
+        logger.info(`receive data: ${data.toString() || '[nothing]'}`);
 
         // 这里再根据情况判断是不是要本地mock数据
         let option = {
@@ -132,18 +139,21 @@ module.exports = (proxyReq, req, res, options) => {
             res: res,
             options: options
         };
-        let mockOPtions = getMockOptions(option);
-        if (mockOPtions && mockOPtions.enable) {
+        let mockOptions = getMockOptions(option);
+        logger.info(`get mock options: ${JSON.stringify(mockOptions)}`);
 
+        if (mockOptions && mockOptions.enable) {
+
+            logger.info('proxyReq destroy');
             // 不转发真实请求到后台
             proxyReq.abort();
             proxyReq.destroy();
 
             // 返回调试数据
-            if (typeof mockOPtions.data === 'string' || mockOPtions.data instanceof Buffer) {
-                res.end(mockOPtions.data);
+            if (typeof mockOptions.data === 'string' || mockOptions.data instanceof Buffer) {
+                res.end(mockOptions.data);
             } else {
-                res.end(JSON.stringify(mockOPtions.data));
+                res.end(JSON.stringify(mockOptions.data));
             }
         }
     });

@@ -28,7 +28,7 @@ function matchContext(context, uri, req) {
             return matchMultiGlobPath(context, uri);
         }
 
-        throw new Error('[MOCK] Invalid context. Expecting something like: ["/api", "/ajax"] or ["/api/**", "!**.html"]');
+        throw new Error('Invalid context. Expecting something like: ["/api", "/ajax"] or ["/api/**", "!**.html"]');
     }
 
     // custom matching
@@ -37,7 +37,7 @@ function matchContext(context, uri, req) {
         return context(pathname, req);
     }
 
-    throw new Error('[MOCK] Invalid context. Expecting something like: "/api" or ["/api", "/ajax"]');
+    throw new Error('Invalid context. Expecting something like: "/api" or ["/api", "/ajax"]');
 }
 
 /**

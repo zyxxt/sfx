@@ -3,6 +3,7 @@
  */
 
 let path = require('path');
+let logger = require('log4js').getLogger('eslint');
 let SFX_CONFIG = require('../lib/config');
 let CLIEngine = require("eslint").CLIEngine;
 let formatter = require('eslint-friendly-formatter');
@@ -34,19 +35,25 @@ if (SFX_CONFIG.eslint) {
     Object.assign(eslintConfig, SFX_CONFIG.eslint);
 }
 
-exports.run = function () {
+exports.run = function (files) {
 
     let cli = new CLIEngine(eslintConfig);
+    let eslintFiles = eslintConfig.files;
+    if (files && files.length) {
+        eslintFiles = files;
+    }
+    logger.info(`eslint files: ${eslintFiles}`);
 
     // lint myfile.js and all files in lib/
-    let report = cli.executeOnFiles(eslintConfig.files);
+    let report = cli.executeOnFiles(eslintFiles);
 
     // only get the error messages
     let errorReport = CLIEngine.getErrorResults(report.results);
-
-    console.log(formatter(errorReport));
-    
-
+    if (errorReport && errorReport.length) {
+        console.log(formatter(errorReport));
+    } else {
+        logger.info('eslint success');
+    }
 };
 
 exports.defaultConfig = eslintConfig;

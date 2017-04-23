@@ -4,6 +4,7 @@
 
 let _ = require('lodash');
 let httpProxy = require('http-proxy');
+let logger = require('log4js').getLogger('proxy_table');
 let contextMatcher = require('./context_matcher');
 let configFactory = require('./config_factory');
 let handlers = require('./handlers');
@@ -53,16 +54,15 @@ module.exports = (context, options) => {
     let lastEventObj;
 
     proxy.on('error', (err, req, res) => {
-        let hostname = (req.headers && req.headers.host) || (req.hostname || req.host);     // (websocket) || (node0.10 || node 4/5)
+        let hostname = (req.headers && req.headers.host) || (req.hostname || req.host);
         let target = proxyOptions.target.host || proxyOptions.target;
-        let errReference = 'https://nodejs.org/api/errors.html#errors_common_system_errors'; // link to Node Common Systems Errors page
 
-        console.error('[HPM] Error occurred while trying to proxy request %s from %s to %s (%s) (%s)', req.url, hostname, target, err.code, errReference);
+        logger.error(`Error occurred while trying to proxy request ${req.url} from ${hostname} to ${target}. code: ${err.code}`);
     });
 
     return (req, res, next) => {
-        console.log(`[Request] ${req.method}: ${req.path}`);
-        console.log(`[Request] headers: ${JSON.stringify(req.headers, true, 4)}`);
+        logger.info(`${req.method}: ${req.path}`);
+        logger.debug(`headers: ${JSON.stringify(req.headers)}`);
 
         config = createConfig(context, req, options);
         if (!shouldSendToProxy(config.context, req, config)) {

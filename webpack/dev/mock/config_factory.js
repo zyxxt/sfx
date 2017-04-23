@@ -37,7 +37,7 @@ function createConfig(context, opts) {
 
 
     if (!config.options.target) {
-        throw new Error('[HPM] Missing "target" option. Example: {target: "http://www.example.org"}');
+        throw new Error('Missing "target" option. Example: {target: "http://www.example.org"}');
     }
 
     // Legacy option.proxyHost
