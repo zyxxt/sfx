@@ -38,6 +38,9 @@ module.exports = {
     // 保持原有的目录结构，会自动保留图片相关文件
     keepStructure: false,
 
+    // 输出所有调试日志
+    logLevel: 'DEBUG',
+
     // webpack 的入口配置
     entry: {
         app: [

@@ -8,7 +8,7 @@ const SFX_CONFIG = require('../../../lib/config');
 
 function onProxyReq (proxyReq, req, res, options) {
     logger.info(`onProxyReq: mock proxy matched. ${proxyReq.method}: ${proxyReq.path}`);
-    // console.debug(`[Proxy Request] headers: ${JSON.stringify(proxyReq._headers, true, 4)}`);
+    logger.debug(`onProxyReq headers: ${JSON.stringify(proxyReq._headers, true, 4)}`);
 
     hook(proxyReq, req, res, options);
 }
