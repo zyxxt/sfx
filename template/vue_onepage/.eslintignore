@@ -1,0 +1,7 @@
+build/*.js
+config/*.js
+mock/*
+src/home/mod_login/particles/*
+src/util/rsa.js
+src/util/co_not_reject.js
+src/i18n/*
