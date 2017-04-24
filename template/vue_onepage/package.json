@@ -1,7 +1,7 @@
 {
-  "name": "BBC1.0",
-  "version": "1.0.0",
-  "description": "BBC1.0",
+  "name": "<%- projectName%>",
+  "version": "<%- version%>",
+  "description": "<%- description%>",
   "author": "zyt <43115@sangfor.com>",
   "private": true,
   "scripts": {
@@ -15,7 +15,7 @@
     "sf-vue-component": "http://200.200.151.26:800/sf-vue/sf-vue-component/repository/archive.tar.gz",
     "vue": "2.1.7",
     "vue-resource": "^1.0.3",
-    "vue-router": "^2.0.1",
+    "vue-router": "2.0.1",
     "vuex": "^2.1.1",
     "wind-dom": "^0.0.3"
   },

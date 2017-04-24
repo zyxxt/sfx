@@ -63,7 +63,7 @@ function initRouter () {
                 name: 'index',
                 path: '/index*',
                 component (resolve) {
-                    require.ensure([], () => resolve(require('../mod_index/welcome.vue')), 'mod_index');
+                    require.ensure([], (require) => resolve(require('../mod_index/welcome.vue')), 'mod_index');
                 }
             }
 

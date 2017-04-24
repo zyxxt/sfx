@@ -15,7 +15,7 @@
     <script type="text/javascript" src="./3parts/vueAll.js"></script>
     <script type="text/javascript" src="./3parts/chartsAll.js"></script>
     <script type="text/javascript" src="./3parts/babelRuntime.js"></script>
-    <title>BBC1.0</title>
+    <title><%- projectName%><%- version%></title>
 </head>
 <body class="bgc-default" x-ms-format-detection="none">
 <script>
@@ -35,10 +35,10 @@
             description: "{{user_description}}"
         },
 
-        publicKey: "<%= htmlWebpackPlugin.options.publicKey %>" || "{{public_key}}",
+        publicKey: "{{public_key}}",
 
         env: {
-            NODE_ENV: "<%= htmlWebpackPlugin.options.NODE_ENV %>",
+            NODE_ENV: "",
         }
 
     };

@@ -3,7 +3,7 @@
  */
 
 exports.check = function () {
-    return false;
+    return true;
 };
 
 exports.mockData = function (option) {
