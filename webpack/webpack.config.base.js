@@ -24,7 +24,7 @@ const PRE_LOADERS = [
         enforce: 'pre',
         include: PROJECT_ROOT,
         exclude: /node_modules/,
-        loader: 'eslint-loader',
+        loader: path.resolve(__dirname, '../node_modules/eslint-loader'),
         options: Object.assign({
 
             // 检验出现告警后，是否继续往下检验
@@ -34,7 +34,7 @@ const PRE_LOADERS = [
             failOnError: false,
             
             // 格式化输出
-            formatter: require('eslint-friendly-formatter')
+            formatter: require(path.resolve(__dirname, '../node_modules/eslint-friendly-formatter'))
         }, eslintConfig.defaultConfig)
     }
 ];
@@ -52,7 +52,7 @@ const LOADERS = [
                 //require('autoprefixer')({
                 //    browsers: ['last 2 versions']
                 //}),
-                require('postcss-cssnext')()
+                require(path.resolve(__dirname, '../node_modules/postcss-cssnext'))()
             ],
             loaders: cssLoaders({
                 sourceMap: SFX_CONFIG.sourceMap,
@@ -62,7 +62,7 @@ const LOADERS = [
     },
     {
         test: /\.js$/,
-        loader: 'babel-loader',
+        loader: path.resolve(__dirname, '../node_modules/babel-loader'),
         include: PROJECT_ROOT,
         exclude: /node_modules/
     },
