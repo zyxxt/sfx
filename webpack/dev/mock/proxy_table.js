@@ -14,8 +14,7 @@ function onProxyReq (proxyReq, req, res, options) {
 }
 
 function onProxyRes (proxyRes, req, res, options) {
-    logger.info(`[onProxyRes] ${proxyRes.method}: ${proxyRes.path}`);
-    // console.debug(`[Proxy Response] headers: ${JSON.stringify(proxyRes.headers, true, 4)}`);
+    logger.debug(`[Proxy Response] headers: ${JSON.stringify(proxyRes.headers, true, 4)}`);
 }
 
 module.exports = () => {

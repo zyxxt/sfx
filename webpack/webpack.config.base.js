@@ -3,9 +3,11 @@
  */
 
 let path = require('path');
+let fs = require('fs');
 let webpack = require('webpack');
 let ExtractTextPlugin = require('extract-text-webpack-plugin');
 let HtmlWebpackPlugin = require('html-webpack-plugin');
+let CopyWebpackPlugin = require('copy-webpack-plugin');
 let cssLoaders = require('./loader/css_loaders');
 let styleLoaders = require('./loader/style_loaders');
 
@@ -130,6 +132,16 @@ function getEntry () {
     return entry;
 }
 
+function getKeepStucture () {
+    let from = fs.readdirSync(path.join(PROJECT_ROOT, 'src')).map(folder => {
+        return {
+            from: path.join(PROJECT_ROOT, 'src', folder),
+            to: path.join(SFX_CONFIG.output.path, folder)
+        };
+    });
+    return getSfxConfig('keepStructure', from);
+}
+
 module.exports = function (type) {
 
     return {
@@ -219,6 +231,22 @@ module.exports = function (type) {
                     ];
                 }
                 return [];
+            } ()),
+
+            ...(function () {
+                if (type === '3parts') {
+                    return [];
+                }
+                let keepStructure = getKeepStucture();
+                if (!keepStructure) {
+                    return [];
+                }
+                return [new CopyWebpackPlugin(keepStructure, {
+                    ignore: [
+                        '*.js'
+                    ],
+                    debug: SFX_CONFIG.logLevel && SFX_CONFIG.logLevel.toLowerCase() || 'debug'
+                })];
             } ()),
 
             ...(function () {

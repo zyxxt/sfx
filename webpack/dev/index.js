@@ -29,7 +29,7 @@ const PROJECT_ROOT = process.cwd();
 function createServer (app) {
     logger.info('create server');
     let server;
-    if (SFX_CONFIG.https) {
+    if (SFX_CONFIG.dev.https) {
         server = https.createServer({
             key: fs.readFileSync(path.join(__dirname, './ca/server-key.key')),
             cert: fs.readFileSync(path.join(__dirname, './ca/server-cert.crt'))

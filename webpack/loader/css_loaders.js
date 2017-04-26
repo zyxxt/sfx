@@ -30,7 +30,9 @@ module.exports = function (options) {
         if (options.extract) {
             return ExtractTextPlugin.extract({
                 use: [sourceLoader],
-                fallback: options.vueLoader ? path.join(__dirname, '../../node_modules/vue-style-loader') : undefined
+                fallback: options.vueLoader ?
+                    path.join(__dirname, '../../node_modules/vue-style-loader') :
+                    path.join(__dirname, '../../node_modules/style-loader')
             });
             // return ExtractTextPlugin.extract('vue-style-loader', sourceLoader);
         } else {
