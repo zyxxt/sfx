@@ -3,6 +3,7 @@
  */
 
 let ExtractTextPlugin = require('extract-text-webpack-plugin');
+let path = require('path');
 
 module.exports = function (options) {
     options = options || {};
@@ -20,6 +21,7 @@ module.exports = function (options) {
                 loader = loader + '-loader';
                 extraParamChar = '?';
             }
+            loader = path.join(__dirname, '../../node_modules/', loader);
             return loader + (options.sourceMap ? extraParamChar + 'sourceMap' : '');
         }).join('!');
 
@@ -28,11 +30,11 @@ module.exports = function (options) {
         if (options.extract) {
             return ExtractTextPlugin.extract({
                 use: [sourceLoader],
-                fallback: 'vue-style-loader'
+                fallback: options.vueLoader ? path.join(__dirname, '../../node_modules/vue-style-loader') : undefined
             });
             // return ExtractTextPlugin.extract('vue-style-loader', sourceLoader);
         } else {
-            return ['vue-style-loader', sourceLoader].join('!');
+            return options.vueLoader ? [path.join(__dirname, '../../node_modules/vue-style-loader'), sourceLoader].join('!') : sourceLoader;
         }
     }
 

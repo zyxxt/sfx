@@ -74,7 +74,8 @@ function createApp (webpackConfig) {
     });
 
     // handle fallback for HTML5 history API
-    app.use(require('connect-history-api-fallback')());
+    // 访问目录时自动退化
+    // app.use(require('connect-history-api-fallback')());
 
     // serve webpack bundle output
     app.use(devMiddleware);

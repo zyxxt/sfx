@@ -58,7 +58,7 @@ function acdc (option) {
     }
     let realPath = path.join(PROJECT_ROOT, MOCK_DIRECTORY);
     data.app_args.name.split('.').forEach(function (name, index, arr) {
-        path.join(realPath, name + (index === arr.length - 1 ? '.js' : ''));
+        realPath = path.join(realPath, name + (index === arr.length - 1 ? '.js' : ''));
     });
     if (!fs.existsSync(realPath)) {
         return '';
@@ -86,7 +86,7 @@ function mapPath (option) {
             insideMapping: INSIDE_MAPPING
         }));
     } else {
-        realPath = INSIDE_MAPPING[mockMapping](option) || ac(option);
+        realPath = INSIDE_MAPPING[mockMapping] ? INSIDE_MAPPING[mockMapping](option) : ac(option);
     }
     return realPath;
 }
@@ -100,6 +100,7 @@ function getMockOptions (proxyOption) {
             enable: false
         };
     }
+    logger.log(`mock map path: ${realPath}`);
 
     // 每次都重新去加载数据
     require.cache[require.resolve(realPath)] = null;

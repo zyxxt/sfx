@@ -56,6 +56,7 @@ const LOADERS = [
             ],
             loaders: cssLoaders({
                 sourceMap: SFX_CONFIG.sourceMap,
+                vueLoader: true,
                 extract: true
             })
         }
@@ -69,12 +70,13 @@ const LOADERS = [
 
     ...styleLoaders({
         sourceMap: SFX_CONFIG.sourceMap,
+        vueLoader: false,
         extract: true
     }),
 
     {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
-        loader: 'url-loader',
+        loader: path.resolve(__dirname, '../node_modules/url-loader'),
         query: {
             limit: 10000,
             name: 'static/img/[name].[hash:7].[ext]'
@@ -82,7 +84,7 @@ const LOADERS = [
     },
     {
         test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
-        loader: 'url-loader',
+        loader: path.resolve(__dirname, '../node_modules/url-loader'),
         query: {
             limit: 10000,
             name: 'static/fonts/[name].[hash:7].[ext]'
