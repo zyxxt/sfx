@@ -43,6 +43,13 @@ function createServer (app) {
 function createApp (webpackConfig) {
     logger.info('create express app');
     let app = express();
+
+    // 自定义中间件，可以对所有请求作处理
+    if (typeof SFX_CONFIG.dev.middleware === 'function') {
+        logger.info('custom middleware found, make sure invoke next() function in the end');
+        app.use(SFX_CONFIG.dev.middleware);
+    }
+    
     let compiler = webpack(webpackConfig/*, function (err, stats) {
         if (err) {
             throw err;
@@ -94,7 +101,6 @@ function createApp (webpackConfig) {
         logger.info(`context: ${context}, target: ${options.target}`);
         app.use(mockMiddleware(context, options));
     });
-
 
     // 第三方库代码
     let thirdPartsPath = path.posix.join(SFX_CONFIG.output.publicPath, SFX_CONFIG.thirdDist);

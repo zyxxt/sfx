@@ -2,7 +2,9 @@
  * Created by zhangyuantao on 2017/3/7.
  */
 
-var path = require('path');
+let path = require('path');
+let fs = require('fs');
+let logger = require('log4js').getLogger('production');
 require('shelljs/global');
 process.env.NODE_ENV = 'production';
 
@@ -30,7 +32,9 @@ exports.run = () => {
 
     webpack(webpackConfig(), function (err, stats) {
         spinner.stop();
-        if (err) throw err;
+        if (err) {
+            throw err;
+        }
         process.stdout.write(stats.toString({
                 colors: true,
                 modules: false,
@@ -38,6 +42,26 @@ exports.run = () => {
                 chunks: false,
                 chunkModules: false
             }) + '\n');
+
+        if (SFX_CONFIG.ie8) {
+            logger.warn('fuck ie! fuck ie! fuck ie! fuck ie! fuck ie! fuck ie! fuck ie! fuck ie! fuck ie! fuck ie! fuck ie! fuck ie!');
+            logger.warn('fuck ie! fuck ie! fuck ie! fuck ie! fuck ie! fuck ie! fuck ie! fuck ie! fuck ie! fuck ie! fuck ie! fuck ie!');
+            logger.warn('fuck ie! fuck ie! fuck ie! fuck ie! fuck ie! fuck ie! fuck ie! fuck ie! fuck ie! fuck ie! fuck ie! fuck ie!');
+            let dir = path.join(SFX_CONFIG.output.path, SFX_CONFIG.staticDirectory, 'js');
+            fs.readdirSync(dir).forEach(file => {
+                if (!/\.js$/.test(file)) {
+                    return;
+                }
+                logger.info(`change keyword: ${path.join(dir, file)}`);
+                let result = require('babel-core').transform(fs.readFileSync(path.join(dir, file)), {
+                    plugins: [
+                        "transform-es3-property-literals",
+                        "transform-es3-member-expression-literals"
+                    ]
+                });
+                fs.writeFileSync(path.join(dir, file), result.code);
+            });
+        }
     });
 };
 

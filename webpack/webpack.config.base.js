@@ -18,9 +18,9 @@ let getSfxConfig = require('../lib/getSfxConfig');
 let eslintConfig = require('../eslint/lint');
 
 // eslint 校验
-const PRE_LOADERS = [
+const ESLINT_LOADERS = [
 
-    // js vue 
+    // js vue
     {
         test: /(\.vue|\.js)$/,
         enforce: 'pre',
@@ -34,17 +34,13 @@ const PRE_LOADERS = [
 
             // 检验出现错误后，是否继续往下检验
             failOnError: false,
-            
+
             // 格式化输出
             formatter: require(path.resolve(__dirname, '../node_modules/eslint-friendly-formatter'))
         }, eslintConfig.defaultConfig)
     }
 ];
-
-const LOADERS = [
-
-    ...PRE_LOADERS,
-
+const VUE_LOADERS = [
     {
         test: /\.vue$/,
         loader: 'vue-loader',
@@ -62,14 +58,30 @@ const LOADERS = [
                 extract: true
             })
         }
-    },
+    }
+];
+const JS_LOADERS = [
     {
         test: /\.js$/,
         loader: path.resolve(__dirname, '../node_modules/babel-loader'),
+        query: {
+            compact: false
+        },
         include: PROJECT_ROOT,
         exclude: /node_modules/
     },
 
+    ...(function () {
+        if (!SFX_CONFIG.ie8) {
+            return [];
+        }
+        return [{
+            test: /\.js$/,
+            loader: path.resolve(__dirname, '../node_modules/es3ify-loader')
+        }];
+    } ())
+];
+const RESOURCE_LOADERS = [
     ...styleLoaders({
         sourceMap: SFX_CONFIG.sourceMap,
         vueLoader: false,
@@ -94,9 +106,18 @@ const LOADERS = [
     }
 ];
 
+const PRE_LOADERS = [
+    ...ESLINT_LOADERS
+];
+
 function getLoaders () {
     let sfxLoaders = SFX_CONFIG.loaders;
-    let loaders = LOADERS;
+    let loaders = [
+        ...PRE_LOADERS,
+        ...VUE_LOADERS,
+        ...JS_LOADERS,
+        ...RESOURCE_LOADERS
+    ];
     if (typeof sfxLoaders === 'function') {
         loaders = sfxLoaders(process.env.NODE_ENV, loaders);
     }
@@ -242,9 +263,6 @@ module.exports = function (type) {
                     return [];
                 }
                 return [new CopyWebpackPlugin(keepStructure, {
-                    ignore: [
-                        '*.js'
-                    ],
                     debug: SFX_CONFIG.logLevel && SFX_CONFIG.logLevel.toLowerCase() || 'debug'
                 })];
             } ()),

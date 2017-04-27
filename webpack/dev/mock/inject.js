@@ -12,8 +12,8 @@
 
     if (remoteAddr) {
         let open = XMLHttpRequest.prototype.open;
-        XMLHttpRequest.prototype.open = function (...args) {
-            let ret = open.apply(this, args);
+        XMLHttpRequest.prototype.open = function () {
+            let ret = open.apply(this, arguments);
             this.setRequestHeader(HTTP_HEADER_KEY, remoteAddr);
             return ret;
         };
