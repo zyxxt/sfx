@@ -44,12 +44,6 @@ function createApp (webpackConfig) {
     logger.info('create express app');
     let app = express();
 
-    // 自定义中间件，可以对所有请求作处理
-    if (typeof SFX_CONFIG.dev.middleware === 'function') {
-        logger.info('custom middleware found, make sure invoke next() function in the end');
-        app.use(SFX_CONFIG.dev.middleware);
-    }
-    
     let compiler = webpack(webpackConfig/*, function (err, stats) {
         if (err) {
             throw err;
@@ -64,6 +58,7 @@ function createApp (webpackConfig) {
     }*/);
 
     let devMiddleware = require('webpack-dev-middleware')(compiler, {
+        serverSideRender: true,
         publicPath: SFX_CONFIG.output.publicPath,
         stats: {
             colors: true,
@@ -79,6 +74,16 @@ function createApp (webpackConfig) {
             cb();
         })
     });
+
+
+    // 自定义中间件，可以对所有请求作处理
+    if (typeof SFX_CONFIG.dev.middleware === 'function') {
+        logger.info('custom middleware found, make sure invoke next() function in the end');
+        app.use(function (...args) {
+            return SFX_CONFIG.dev.middleware(...args, compiler, devMiddleware);
+        });
+    }
+
 
     // handle fallback for HTML5 history API
     // 访问目录时自动退化
@@ -106,7 +111,11 @@ function createApp (webpackConfig) {
     let thirdPartsPath = path.posix.join(SFX_CONFIG.output.publicPath, SFX_CONFIG.thirdDist);
     app.use(thirdPartsPath, express.static(path.resolve(SFX_CONFIG.output.path, SFX_CONFIG.thirdDist)));
 
+    
     // 静态资源目录
+    // let rootPath = path.posix.join(SFX_CONFIG.output.publicPath, '/');
+    // app.use(rootPath, express.static(path.resolve(PROJECT_ROOT, '/')));
+    //
     if (SFX_CONFIG.staticDirectory) {
         let staticPath = path.posix.join(SFX_CONFIG.output.publicPath, SFX_CONFIG.staticDirectory);
         app.use(staticPath, express.static(path.resolve(PROJECT_ROOT, SFX_CONFIG.staticDirectory)));
