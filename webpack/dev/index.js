@@ -45,21 +45,13 @@ function createApp (webpackConfig) {
     let app = express();
 
     let compiler = webpack(webpackConfig/*, function (err, stats) {
-        if (err) {
-            throw err;
-        }
-        process.stdout.write(stats.toString({
-                colors: true,
-                modules: false,
-                children: true,
-                chunks: false,
-                chunkModules: false
-            }) + '\n');
+        compiler.webpackStats = { err, stats };
     }*/);
 
     let devMiddleware = require('webpack-dev-middleware')(compiler, {
         serverSideRender: true,
         publicPath: SFX_CONFIG.output.publicPath,
+        index: 'src/_index.html',
         stats: {
             colors: true,
             chunks: false
@@ -76,6 +68,20 @@ function createApp (webpackConfig) {
     });
 
 
+    // handle fallback for HTML5 history API
+    // 访问目录时自动退化
+    // app.use(require('connect-history-api-fallback')());
+
+
+
+
+    // serve webpack bundle output
+    app.use(devMiddleware);
+
+
+
+
+
     // 自定义中间件，可以对所有请求作处理
     if (typeof SFX_CONFIG.dev.middleware === 'function') {
         logger.info('custom middleware found, make sure invoke next() function in the end');
@@ -84,13 +90,6 @@ function createApp (webpackConfig) {
         });
     }
 
-
-    // handle fallback for HTML5 history API
-    // 访问目录时自动退化
-    // app.use(require('connect-history-api-fallback')());
-
-    // serve webpack bundle output
-    app.use(devMiddleware);
 
     // enable hot-reload and state-preserving
     // compilation error display
