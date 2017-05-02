@@ -43,10 +43,7 @@ function createServer (app) {
 function createApp (webpackConfig) {
     logger.info('create express app');
     let app = express();
-
-    let compiler = webpack(webpackConfig/*, function (err, stats) {
-        compiler.webpackStats = { err, stats };
-    }*/);
+    let compiler = webpack(webpackConfig);
 
     let devMiddleware = require('webpack-dev-middleware')(compiler, {
         serverSideRender: true,
@@ -67,32 +64,22 @@ function createApp (webpackConfig) {
         })
     });
 
-
     // handle fallback for HTML5 history API
     // 访问目录时自动退化
     // app.use(require('connect-history-api-fallback')());
 
-
-
-
-    // serve webpack bundle output
+    // 本地服务器中间件
     app.use(devMiddleware);
-
-
-
-
 
     // 自定义中间件，可以对所有请求作处理
     if (typeof SFX_CONFIG.dev.middleware === 'function') {
         logger.info('custom middleware found, make sure invoke next() function in the end');
         app.use(function (...args) {
-            return SFX_CONFIG.dev.middleware(...args, compiler, devMiddleware);
+            return SFX_CONFIG.dev.middleware(...args, compiler);
         });
     }
 
-
-    // enable hot-reload and state-preserving
-    // compilation error display
+    // 改动时自动重新部署，刷新页面
     app.use(hotMiddleware);
 
     // 代理转发
@@ -102,7 +89,8 @@ function createApp (webpackConfig) {
         if (typeof options === 'string') {
             options = { target: options }
         }
-        logger.info(`context: ${context}, target: ${options.target}`);
+        options.secure = false;
+        logger.info(`[mock proxy] context: ${context}, target: ${options.target}`);
         app.use(mockMiddleware(context, options));
     });
 
@@ -112,9 +100,6 @@ function createApp (webpackConfig) {
 
     
     // 静态资源目录
-    // let rootPath = path.posix.join(SFX_CONFIG.output.publicPath, '/');
-    // app.use(rootPath, express.static(path.resolve(PROJECT_ROOT, '/')));
-    //
     if (SFX_CONFIG.staticDirectory) {
         let staticPath = path.posix.join(SFX_CONFIG.output.publicPath, SFX_CONFIG.staticDirectory);
         app.use(staticPath, express.static(path.resolve(PROJECT_ROOT, SFX_CONFIG.staticDirectory)));

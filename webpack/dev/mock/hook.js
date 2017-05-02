@@ -100,7 +100,7 @@ function getMockOptions (proxyOption) {
             enable: false
         };
     }
-    logger.log(`mock map path: ${realPath}`);
+    logger.info(`mock map path: ${realPath}`);
 
     // 每次都重新去加载数据
     require.cache[require.resolve(realPath)] = null;
@@ -112,9 +112,10 @@ function getMockOptions (proxyOption) {
             enable: false
         };
     }
+    let data = mockModule.mockData(proxyOption);
     return {
-        enable: typeof mockModule.check === 'function' ? !!mockModule.check(proxyOption) : true,
-        data: mockModule.mockData(proxyOption)
+        enable: typeof mockModule.check === 'function' ? !!mockModule.check(proxyOption) : data !== false,
+        data: data
     };
 }
 
