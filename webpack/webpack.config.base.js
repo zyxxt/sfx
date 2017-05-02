@@ -43,7 +43,7 @@ const ESLINT_LOADERS = [
 const VUE_LOADERS = [
     {
         test: /\.vue$/,
-        loader: 'vue-loader',
+        loader: path.resolve(__dirname, '../node_modules/vue-loader'),
         options: {
             autoprefixer: true,
             postcss: [
