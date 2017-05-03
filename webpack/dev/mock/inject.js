@@ -3,17 +3,17 @@
  */
 
 (function () {
-    const REMOTE_KEY = 'remote';
-    const HTTP_HEADER_KEY = 'dev-remote-addr';
+    var REMOTE_KEY = 'remote';
+    var HTTP_HEADER_KEY = 'dev-remote-addr';
 
-    let reg = new RegExp("(^|&)" + REMOTE_KEY + "=([^&]*)(&|$)");
-    let r = window.location.search.substr(1).match(reg);
-    let remoteAddr = r && r[2] && decodeURIComponent(r[2]);
+    var reg = new RegExp("(^|&)" + REMOTE_KEY + "=([^&]*)(&|$)");
+    var r = window.location.search.substr(1).match(reg);
+    var remoteAddr = r && r[2] && decodeURIComponent(r[2]);
 
     if (remoteAddr) {
-        let open = XMLHttpRequest.prototype.open;
+        var open = XMLHttpRequest.prototype.open;
         XMLHttpRequest.prototype.open = function () {
-            let ret = open.apply(this, arguments);
+            var ret = open.apply(this, arguments);
             this.setRequestHeader(HTTP_HEADER_KEY, remoteAddr);
             return ret;
         };
