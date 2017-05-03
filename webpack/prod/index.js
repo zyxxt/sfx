@@ -43,24 +43,33 @@ exports.run = () => {
                 chunkModules: false
             }) + '\n');
 
+        if (stats.hasErrors()) {
+            process.exit(1);
+        }
+
         if (SFX_CONFIG.ie8) {
-            logger.warn('fuck ie! fuck ie! fuck ie! fuck ie! fuck ie! fuck ie! fuck ie! fuck ie! fuck ie! fuck ie! fuck ie! fuck ie!');
-            logger.warn('fuck ie! fuck ie! fuck ie! fuck ie! fuck ie! fuck ie! fuck ie! fuck ie! fuck ie! fuck ie! fuck ie! fuck ie!');
-            logger.warn('fuck ie! fuck ie! fuck ie! fuck ie! fuck ie! fuck ie! fuck ie! fuck ie! fuck ie! fuck ie! fuck ie! fuck ie!');
+            logger.warn('fuck ie! transform es3 keyword!');
             let dir = path.join(SFX_CONFIG.output.path, SFX_CONFIG.staticDirectory, 'js');
-            fs.readdirSync(dir).forEach(file => {
-                if (!/\.js$/.test(file)) {
+            let transformID = setInterval(() => {
+                if (!fs.existsSync(dir)) {
                     return;
                 }
-                logger.info(`change keyword: ${path.join(dir, file)}`);
-                let result = require('babel-core').transform(fs.readFileSync(path.join(dir, file)), {
-                    plugins: [
-                        "transform-es3-property-literals",
-                        "transform-es3-member-expression-literals"
-                    ]
+                clearInterval(transformID);
+                fs.readdirSync(dir).forEach(file => {
+                    if (!/\.js$/.test(file)) {
+                        return;
+                    }
+                    let result = require('babel-core').transform(fs.readFileSync(path.join(dir, file)), {
+                        plugins: [
+                            "transform-es3-property-literals",
+                            "transform-es3-member-expression-literals"
+                        ]
+                    });
+                    fs.writeFileSync(path.join(dir, file), result.code);
+                    logger.info(`${path.join(dir, file)}. done`);
                 });
-                fs.writeFileSync(path.join(dir, file), result.code);
-            });
+                logger.warn('fuck ie! transform es3 success');
+            }, 100);
         }
     });
 };
