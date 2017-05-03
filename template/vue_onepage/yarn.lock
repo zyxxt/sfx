@@ -118,17 +118,6 @@ safe-buffer@^5.0.1:
   version "5.0.1"
   resolved "http://200.200.151.26:7001/safe-buffer/download/safe-buffer-5.0.1.tgz#d263ca54696cd8a306b5ca6551e92de57918fbe7"
 
-"sf-vue-component@http://200.200.151.26:800/sf-vue/sf-vue-component/repository/archive.tar.gz":
-  version "0.0.1"
-  resolved "http://200.200.151.26:800/sf-vue/sf-vue-component/repository/archive.tar.gz#30287ccfb1ff404638ba5d1da4278055a7b247ee"
-  dependencies:
-    vue "2.1.7"
-    vue-popup "^0.2.14"
-    vue-resource "^1.0.3"
-    vue-router "^2.0.1"
-    vuex "^2.1.1"
-    wind-dom "^0.0.3"
-
 timed-out@^4.0.0:
   version "4.0.1"
   resolved "http://200.200.151.26:7001/timed-out/download/timed-out-4.0.1.tgz#f32eacac5a175bea25d7fab565ab3ed8741ef56f"
