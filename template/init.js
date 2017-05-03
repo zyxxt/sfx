@@ -94,7 +94,7 @@ function *stdIn () {
     let option;
     while (true) {
         option = {
-            projectName: PROJECT_ROOT.replace(path.dirname(PROJECT_ROOT), '').slice(1),
+            projectName: PROJECT_ROOT.replace(path.dirname(PROJECT_ROOT), ''),
             version: '1.0.0',
             description: 'awesome project'
         };

@@ -52,11 +52,16 @@ const VUE_LOADERS = [
                 //}),
                 require(path.resolve(__dirname, '../node_modules/postcss-cssnext'))()
             ],
-            loaders: cssLoaders({
+            // preLoaders: {
+            //     js: path.resolve(__dirname, '../node_modules/eslint-loader')
+            // },
+            loaders: Object.assign({
+                js: path.resolve(__dirname, '../node_modules/babel-loader'),
+            }, cssLoaders({
                 sourceMap: SFX_CONFIG.sourceMap,
                 vueLoader: true,
                 extract: true
-            })
+            }))
         }
     }
 ];

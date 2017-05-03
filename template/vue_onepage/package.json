@@ -1,29 +1,37 @@
 {
-  "name": "<%- projectName%>",
-  "version": "<%- version%>",
-  "description": "<%- description%>",
-  "author": "zyt <43115@sangfor.com>",
-  "private": true,
-  "scripts": {
-    "update": "rm -rf ./node_modules/sf-vue-component && yarn install"
-  },
-  "dependencies": {
-    "babel-polyfill": "^6.23.0",
-    "co": "^4.6.0",
-    "echarts": "http://200.200.151.26:800/bbc/echart/repository/archive.tar.gz",
-    "highcharts": "^5.0.6",
-    "sf-vue-component": "http://200.200.151.26:800/sf-vue/sf-vue-component/repository/archive.tar.gz",
-    "vue": "2.1.7",
-    "vue-resource": "^1.0.3",
-    "vue-router": "2.0.1",
-    "vuex": "^2.1.1",
-    "wind-dom": "^0.0.3"
-  },
-  "devDependencies": {
-
-  },
-  "engines": {
-    "node": ">= 4.0.0",
-    "npm": ">= 3.0.0"
-  }
+    "name": "<%- projectName%>",
+    "version": "<%- version%>",
+    "description": "<%- description%>",
+    "author": "zyt <43115@sangfor.com>",
+    "private": true,
+    "scripts": {
+        "update": "rm -rf ./node_modules/sf-vue-component && yarn install"
+    },
+    "dependencies": {
+        "babel-polyfill": "^6.23.0",
+        "co": "^4.6.0",
+        "echarts": "http://200.200.151.26:800/bbc/echart/repository/archive.tar.gz",
+        "highcharts": "^5.0.6",
+        "sf-vue-component": "http://200.200.151.26:800/sf-vue/sf-vue-component/repository/archive.tar.gz",
+        "vue": "2.1.7",
+        "vue-resource": "^1.0.3",
+        "vue-router": "2.0.1",
+        "vuex": "^2.1.1",
+        "wind-dom": "^0.0.3"
+    },
+    "devDependencies": {
+        "babel-helper-vue-jsx-merge-props": "^2.0.2",
+        "babel-plugin-syntax-jsx": "^6.18.0",
+        "babel-plugin-transform-es2015-modules-commonjs": "^6.24.1",
+        "babel-plugin-transform-runtime": "^6.23.0",
+        "babel-plugin-transform-strict-mode": "^6.24.1",
+        "babel-plugin-transform-vue-jsx": "^3.4.3",
+        "babel-preset-es2015": "^6.24.1",
+        "babel-preset-stage-0": "^6.24.1",
+        "vue-hot-reload-api": "^2.1.0"
+    },
+    "engines": {
+        "node": ">= 4.0.0",
+        "npm": ">= 3.0.0"
+    }
 }
