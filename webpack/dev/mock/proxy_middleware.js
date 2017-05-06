@@ -3,6 +3,7 @@
  */
 
 let _ = require('lodash');
+let url = require('url');
 let httpProxy = require('http-proxy');
 let logger = require('log4js').getLogger('proxy_table');
 let contextMatcher = require('./context_matcher');
@@ -29,8 +30,13 @@ function createConfig (context, req, options) {
     if (target) {
         options.target = target;
     }
-    return configFactory.createConfig(context, options);
 
+    if (options.target) {
+        let urlOption = url.parse(options.target);
+        options.headers = options.headers || {};
+        options.headers.host = urlOption.host || urlOption.hostname;
+    }
+    return configFactory.createConfig(context, options);
 }
 
 function createProxyOptions (req, config) {
