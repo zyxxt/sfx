@@ -14,6 +14,7 @@ function onProxyReq (proxyReq, req, res, options) {
 }
 
 function onProxyRes (proxyRes, req, res, options) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
     logger.debug(`[Proxy Response] headers: ${JSON.stringify(proxyRes.headers, true, 4)}`);
 }
 

@@ -152,6 +152,7 @@ module.exports = (proxyReq, req, res, options) => {
             proxyReq.destroy();
 
             // 返回调试数据
+            res.setHeader('Access-Control-Allow-Origin', '*');
             if (typeof mockOptions.data === 'string' || mockOptions.data instanceof Buffer) {
                 res.end(mockOptions.data);
             } else {
