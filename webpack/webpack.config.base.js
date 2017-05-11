@@ -236,7 +236,10 @@ module.exports = function (type) {
             // new webpack.optimize.DedupePlugin(),
 
             // 把css单独生成文件
-            new ExtractTextPlugin(path.join(SFX_CONFIG.staticDirectory, '/css/[name].css')),
+            new ExtractTextPlugin({
+                filename: path.join(SFX_CONFIG.staticDirectory, '/css/[name].css'),
+                allChunks: true
+            }),
 
             ...(function () {
                 if (!Array.isArray(SFX_CONFIG.htmlPluginOptions)) {
