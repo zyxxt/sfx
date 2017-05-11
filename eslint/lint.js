@@ -3,7 +3,7 @@
  */
 
 let path = require('path');
-let logger = require('log4js').getLogger('eslint');
+let logger = require('../util/logger').getLogger('eslint');
 let SFX_CONFIG = require('../lib/config');
 let CLIEngine = require("eslint").CLIEngine;
 let formatter = require('eslint-friendly-formatter');

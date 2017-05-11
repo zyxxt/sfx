@@ -10,7 +10,7 @@ let path= require('path');
 let webpack = require('webpack');
 let webpackConfig = require('./webpack.config.3parts.js');
 let SFX_CONFIG = require('../../lib/config');
-let logger = require('log4js').getLogger('3parts');
+let logger = require('../../util/logger').getLogger('3parts');
 
 exports.run = () => {
     logger.info('Built third parts file...');

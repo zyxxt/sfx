@@ -1,11 +1,8 @@
 #!/usr/bin/env node --harmony
 
 let commander = require('commander');
-// let pad = require('pad');
 let sfx = require('../index');
 const PACKAGE_JSON = require('../package.json');
-
-require('../util/logger');
 
 console.log(`Welcome to use sfx cli tool (version: ${PACKAGE_JSON.version}), use "sfx --help" show more options.
 `);

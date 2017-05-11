@@ -3,12 +3,11 @@
  */
 
 require('shelljs/global');
-
 process.env.NODE_ENV = 'development';
 
 let ora = require('ora');
 let webpack = require('webpack');
-let logger = require('log4js').getLogger('dev');
+let logger = require('../../util/logger').getLogger('dev');
 
 let fs = require('fs');
 let path = require('path');

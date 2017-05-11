@@ -2,12 +2,12 @@
  * Created by zhangyuantao on 2017/3/7.
  */
 
-let path = require('path');
-let fs = require('fs');
-let logger = require('log4js').getLogger('production');
 require('shelljs/global');
 process.env.NODE_ENV = 'production';
 
+let path = require('path');
+let fs = require('fs');
+let logger = require('../../util/logger').getLogger('production');
 let ora = require('ora');
 let webpack = require('webpack');
 const SFX_CONFIG = require('../../lib/config');
