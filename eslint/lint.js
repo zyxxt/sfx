@@ -3,16 +3,21 @@
  */
 
 let path = require('path');
+let fs = require('fs');
 let logger = require('../util/logger').getLogger('eslint');
 let SFX_CONFIG = require('../lib/config');
 let CLIEngine = require("eslint").CLIEngine;
 let formatter = require('eslint-friendly-formatter');
 const PROJECT_ROOT = process.cwd();
 
+const ESLINT_RC = path.resolve(PROJECT_ROOT, '.eslintrc.js');
+const ESLINT_IGNORE = path.resolve(PROJECT_ROOT, '.eslintignore');
+
+
 let eslintConfig = {
     allowInlineConfig: true,
 
-    configFile: path.resolve(PROJECT_ROOT, '.eslintrc.js'),
+    configFile: fs.existsSync(ESLINT_RC) ? ESLINT_RC : undefined,
     extensions: [
         '.js',
         '.vue',
@@ -20,9 +25,9 @@ let eslintConfig = {
     ],
 
     ignore: true,
-    ignorePath: path.resolve(PROJECT_ROOT, '.eslintignore'),
+    ignorePath: fs.existsSync(ESLINT_IGNORE) ? ESLINT_IGNORE : undefined,
 
-    useEslintrc: true,
+    useEslintrc: !!fs.existsSync(ESLINT_RC),
 
     fix: true,
 

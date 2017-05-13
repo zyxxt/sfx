@@ -94,8 +94,10 @@ function createApp (webpackConfig) {
     });
 
     // 第三方库代码
-    let thirdPartsPath = path.posix.join(SFX_CONFIG.output.publicPath, SFX_CONFIG.thirdDist);
-    app.use(thirdPartsPath, express.static(path.resolve(SFX_CONFIG.output.path, SFX_CONFIG.thirdDist)));
+    if (SFX_CONFIG.thirdDist) {
+        let thirdPartsPath = path.posix.join(SFX_CONFIG.output.publicPath, SFX_CONFIG.thirdDist);
+        app.use(thirdPartsPath, express.static(path.resolve(SFX_CONFIG.output.path, SFX_CONFIG.thirdDist)));
+    }
 
     
     // 静态资源目录

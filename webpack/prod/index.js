@@ -25,10 +25,12 @@ exports.run = () => {
     spinner.start();
 
     // 拷贝静态资源目录
-    var assetsPath = path.join(SFX_CONFIG.output.path, SFX_CONFIG.staticDirectory);
-    rm('-rf', assetsPath);
-    mkdir('-p', assetsPath);
-    cp('-R', 'static/*', assetsPath);
+    if (SFX_CONFIG.staticDirectory) {
+        let assetsPath = path.join(SFX_CONFIG.output.path, SFX_CONFIG.staticDirectory);
+        rm('-rf', assetsPath);
+        mkdir('-p', assetsPath);
+        cp('-R', 'static/*', assetsPath);
+    }
 
     webpack(webpackConfig(), function (err, stats) {
         spinner.stop();
@@ -47,7 +49,7 @@ exports.run = () => {
             process.exit(1);
         }
 
-        if (SFX_CONFIG.ie8) {
+        if (SFX_CONFIG.ie8 && SFX_CONFIG.staticDirectory) {
             logger.warn('fuck ie! transform es3 keyword!');
             let dir = path.join(SFX_CONFIG.output.path, SFX_CONFIG.staticDirectory, 'js');
             let transformID = setInterval(() => {

@@ -13,6 +13,12 @@ let SFX_CONFIG = require('../../lib/config');
 let logger = require('../../util/logger').getLogger('3parts');
 
 exports.run = () => {
+    if (!SFX_CONFIG.thirdEntry || !SFX_CONFIG.thirdDist) {
+        return new Promise(function (resolve) {
+            resolve();
+        });
+    }
+
     logger.info('Built third parts file...');
 
     let assetsPath = path.resolve(SFX_CONFIG.output.path, SFX_CONFIG.thirdDist);

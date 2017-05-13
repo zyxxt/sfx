@@ -58,7 +58,12 @@ module.exports = function () {
             // new webpack.optimize.DedupePlugin(),
 
             // 把css单独生成文件
-            new ExtractTextPlugin(path.join(SFX_CONFIG.staticDirectory, '/css/[name].css')),
+            ...(function () {
+                if (!SFX_CONFIG.staticDirectory) {
+                    return [];
+                }
+                return [new ExtractTextPlugin(path.join(SFX_CONFIG.staticDirectory, '/css/[name].css'))];
+            } ()),
 
             new webpack.DllPlugin({
                 name: '[name]',

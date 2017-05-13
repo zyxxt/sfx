@@ -60,7 +60,9 @@ const VUE_LOADERS = [
             }, cssLoaders({
                 sourceMap: SFX_CONFIG.sourceMap,
                 vueLoader: true,
-                extract: true
+
+                // 配置了静态输出目录，才自动把css提取到静态目录下面的/css/下面
+                extract: !!SFX_CONFIG.staticDirectory
             }))
         }
     }
@@ -90,7 +92,7 @@ const RESOURCE_LOADERS = [
     ...styleLoaders({
         sourceMap: SFX_CONFIG.sourceMap,
         vueLoader: false,
-        extract: true
+        extract: !!SFX_CONFIG.staticDirectory
     }),
 
     {
@@ -159,13 +161,14 @@ function getEntry () {
 }
 
 function getKeepStucture () {
-    let from = fs.readdirSync(path.join(PROJECT_ROOT, 'src')).map(folder => {
-        return {
-            from: path.join(PROJECT_ROOT, 'src', folder),
-            to: path.join(SFX_CONFIG.output.path, folder)
-        };
-    });
-    return getSfxConfig('keepStructure', from);
+    
+    // let from = fs.readdirSync(path.join(PROJECT_ROOT, 'src')).map(folder => {
+    //     return {
+    //         from: path.join(PROJECT_ROOT, 'src', folder),
+    //         to: path.join(SFX_CONFIG.output.path, folder)
+    //     };
+    // });
+    return getSfxConfig('keepStructure', []);
 }
 
 module.exports = function (type) {
@@ -236,10 +239,15 @@ module.exports = function (type) {
             // new webpack.optimize.DedupePlugin(),
 
             // 把css单独生成文件
-            new ExtractTextPlugin({
-                filename: path.join(SFX_CONFIG.staticDirectory, '/css/[name].css'),
-                allChunks: true
-            }),
+            ...(function () {
+                if (!SFX_CONFIG.staticDirectory) {
+                    return [];
+                }
+                return [new ExtractTextPlugin({
+                    filename: path.join(SFX_CONFIG.staticDirectory, '/css/[name].css'),
+                    allChunks: true
+                })];
+            } ()),
 
             ...(function () {
                 if (!Array.isArray(SFX_CONFIG.htmlPluginOptions)) {
@@ -267,7 +275,7 @@ module.exports = function (type) {
                     return [];
                 }
                 let keepStructure = getKeepStucture();
-                if (!keepStructure) {
+                if (!keepStructure || !Array.isArray(keepStructure) || !keepStructure.length) {
                     return [];
                 }
                 return [new CopyWebpackPlugin(keepStructure, {
