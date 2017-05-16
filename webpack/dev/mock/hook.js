@@ -104,7 +104,15 @@ function getMockOptions (proxyOption) {
 
     // 每次都重新去加载数据
     require.cache[require.resolve(realPath)] = null;
-    let mockModule = require(realPath);
+    let mockModule;
+    try {
+        mockModule = require(realPath);
+    } catch (e) {
+        logger.error(e);
+        return {
+            enable: false
+        };
+    }
 
     if (!mockModule || typeof mockModule.mockData !== 'function') {
         logger.debug(`can not find "mockData () {}" function in mock file`);
