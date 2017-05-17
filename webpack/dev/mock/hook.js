@@ -150,7 +150,8 @@ module.exports = (proxyReq, req, res, options) => {
             options: options
         };
         let mockOptions = getMockOptions(option);
-        logger.info(`get mock options: ${JSON.stringify(mockOptions)}`);
+        logger.info(`get mock options: ${JSON.stringify({enable: mockOptions.enable})}`);
+        logger.debug(`get mock options: ${JSON.stringify({data: mockOptions.data})}`);
 
         if (mockOptions && mockOptions.enable) {
 

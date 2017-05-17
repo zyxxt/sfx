@@ -44,6 +44,13 @@ function createApp (webpackConfig) {
     let app = express();
     let compiler = webpack(webpackConfig);
 
+    // 记录下所有请求
+    app.use((req, res, next) => {
+        logger.info(`${req.method}: ${req.path}`);
+        logger.debug(`headers: ${JSON.stringify(req.headers)}`);
+        next();
+    });
+
     let devMiddleware = require('webpack-dev-middleware')(compiler, {
         serverSideRender: true,
         publicPath: SFX_CONFIG.output.publicPath,

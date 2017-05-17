@@ -67,9 +67,6 @@ module.exports = (context, options) => {
     });
 
     return (req, res, next) => {
-        logger.info(`${req.method}: ${req.path}`);
-        logger.debug(`headers: ${JSON.stringify(req.headers)}`);
-
         config = createConfig(context, req, options);
         if (!shouldSendToProxy(config.context, req, config)) {
             next();
