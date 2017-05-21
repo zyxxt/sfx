@@ -65,8 +65,8 @@
         htmlPluginOptions: [
             {
                 filename: 'index.html', // 生成的文件
-                template: 'index.html', // 源文件
-                favicon:'favicon.ico',
+                template: 'src/index.html', // 源文件
+                favicon:'src/favicon.ico',
                 chunks: [ manifest', 'vendor', 'app' ], // 自动注入哪些chunk，跟entry对应
                 inject: true, // 把chunks注入到html里去
                 chunksSortMode: 'dependency',
@@ -116,6 +116,10 @@
     };
 
 > 当然，由于是额外的`loader`，你还需要在自己的项目目录安装这些依赖包
+
+    cd your-project
+    yarn add @sxf/tpl-loader -D
+    // npm install @sfx/tpl-loader -D
 
 
 ### 集成webpack
