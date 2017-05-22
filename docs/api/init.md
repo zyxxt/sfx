@@ -1,6 +1,7 @@
 
 ## 使用方式
 
+    cd your-project
     sfx init [options] <template>
 
 ## 框架目录结构
@@ -63,11 +64,11 @@
 
 !> 当然不需要的目录是可以删除掉的，但是总体结构不允许再做改变
 
-## 内置模板
+## 内置模板 &lt;template&gt;
 
 - [vue_simple](#vue_simple)
-- vue_onepage
-- ac
+- [vue_onepage](#vue_onepage)
+- [ac](#ac)
 - ...
 
 ### vue_simple
@@ -81,3 +82,23 @@
 ### ac
 
 `AC运营平台`项目主体结构，适用采用`Extjs`, `SF框架`的单页面，兼容`IE8`
+
+## 参数 [options]
+
+### -i, --install
+
+自动调用`yarn install`
+
+### -b, --build
+
+自动调用`sfx build`
+
+
+## Node API
+
+    const sfx = require('sfx');
+    sfx.init(templateName, options);
+
+    // templateName 包含的模板跟上面的一致：即vue_simple, vue_onepage, ac等
+    // options 支持：{ install: true, build: false }
+
