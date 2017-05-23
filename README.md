@@ -98,7 +98,7 @@
                     onProxyRes: undefined // 代理数据返回时触发，可以修改后台返回的数据，比如统一添加http头部等
                 }
             }
-        s
+        }
     };
 
 `sfx`的大部分配置是`webpack`本身的配置，比如：`entry`, `output`, 脚手架的作用是把`webpack`大部分配置先封装好，正常使用时无需像`webpack`一样配置那么多，特别是对于各种文件加载器`loader`, `sfx`内部几乎把常用的都涵盖到了，比如：`babel-loader`, `jshint-loader`, `style-loader`等等，如果需要自定义，`sfx.config.js`本身也可以支持扩展，如下：
