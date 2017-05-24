@@ -1,5 +1,47 @@
 
-支持的配置项如下：
+## sfx
+
+`sfx`脚手架运行时需要在当前目录中查找`sfx.config.js`才可运行，此配置文件主要功能如下：
+
+1. 脚手架本身配置
+2. 对内置`webpack`的配置进行扩展
+
+?> 关于`webpack`配置扩展，`sfx`主要是封装了常用的内置`loader`跟`plugins`，整合后对外只需要一些基本的配置，无须像`webpack`一样配置那么多内容
+
+!> `sfx eslint [files]`该命令不需要`sfx.config.js`即可运行
+
+## sfx.config.js
+
+`sfx.config.js`文件作为`nodejs`的模块进行引入，`module.exports`出来的结果作为`sfx`的配置，即`nodejs`怎么写`sfx.config.js`就怎么写，比如：
+
+    let fs = require('fs');
+    let curDir = __dirname;
+    let curFile = __filename;
+    module.exports = {
+
+        // sfx 具体配置
+        ...
+    };
+
+### NODE_ENV
+
+`sfx`运行时，会设置全局的环境变量`NODE_ENV`，项目可以自行判断根据不同环境生成不同的`sfx`配置，它的取值如下
+
+- `production`
+- `development`
+- `test`
+
+比如：
+
+    const NODE_ENV = process.env.NODE_ENV;
+    module.exports = {
+
+        // 只在打正式包时才压缩代码
+        uglify: NODE_ENV === 'production'
+    };
+
+
+### 所有配置
 
     const NODE_ENV = process.env.NODE_ENV; // production, development
     module.exports = {
