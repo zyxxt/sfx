@@ -35,6 +35,9 @@ function createConfig (context, req, options) {
         let urlOption = url.parse(options.target);
         options.headers = options.headers || {};
         options.headers.host = urlOption.host || urlOption.hostname;
+        if (!options.headers['Cache-Control']) {
+            options.headers['Cache-Control'] = 'no-cache, no-store';
+        }
     }
     return configFactory.createConfig(context, options);
 }
