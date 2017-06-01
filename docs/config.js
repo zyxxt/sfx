@@ -13,6 +13,8 @@ window.$docsify = {
 
     auto2top: true,
 
+    basePath: '/docs/',
+
     homepage: 'home_page.md',
 
     // 加载 左树目录
