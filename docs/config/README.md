@@ -57,14 +57,17 @@
             files: ['src']
         },
 
+        // 开启sourcemap
         sourceMap: 'source-map',
-        uglify: false,
 
+        // 开启压缩
+        uglify: false,
 
         // webpack 的入口配置
         entry: {
             app: [ './src/home/mod_launch/fire.js']
         },
+        
         // webpack 输出配置
         output: {
             // 打包输出的目录
@@ -77,12 +80,29 @@
             chunkFilename: `${STATIC_DIRECTORY}/js/[name].[hash].js`
         },
 
+        // webpack modules.rules 配置，可以添加额外的加载器
+        // webpack 相关配置，支持函数调用的方式，全自动webpack.merge到内部默认配置
+        loaders (nodeEnv, loader) {
+            loader.push({
+                test: /\.(tpl)$/,
+                loader: '@sxf/tpl-loader',
+                exclude: /node_modules/
+            });
+            return loader;
+        },
+        resolve, 
+        devtool,
+        externals,
+        plugins (nodeEnv, plugin) { return plugin; }
+
         // 第三方代码单独打包，相比CommonsChunkPlugin的优秀在于可以手动指明合并哪些模块
         thirdEntry: {
             vueAll: [ 'vue', 'vue-resource' ]
         },
         thirdDist: THIRD_DIRECTORY,
-        staticDirectory: STATIC_DIRECTORY, // 静态资源目录，比如字体、一些大图片等
+
+        // 静态资源目录，比如字体、一些大图片等
+        staticDirectory: STATIC_DIRECTORY,
 
         // 入口html文件配置，由于是单页，一般只配置login.html, index.html即可，可参考： https://github.com/jantimon/html-webpack-plugin
         htmlPluginOptions: [
@@ -123,3 +143,5 @@
             }
         }
     };
+
+所有支持的配置都要上面显示了，下面再具体说明每一个配置的作用
