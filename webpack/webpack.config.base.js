@@ -58,7 +58,7 @@ const VUE_LOADERS = [
             loaders: Object.assign({
                 js: path.resolve(__dirname, '../node_modules/babel-loader'),
             }, cssLoaders({
-                sourceMap: SFX_CONFIG.sourceMap,
+                sourceMap: getSfxConfig('sourceMap'),
                 vueLoader: true,
 
                 // 配置了静态输出目录，才自动把css提取到静态目录下面的/css/下面
@@ -90,7 +90,7 @@ const JS_LOADERS = [
 ];
 const RESOURCE_LOADERS = [
     ...styleLoaders({
-        sourceMap: SFX_CONFIG.sourceMap,
+        sourceMap: getSfxConfig('sourceMap'),
         vueLoader: false,
         extract: !!SFX_CONFIG.staticDirectory
     }),
@@ -261,6 +261,7 @@ module.exports = function (type) {
                 if (SFX_CONFIG.uglify) {
                     return [
                         new webpack.optimize.UglifyJsPlugin({
+                            sourceMap: getSfxConfig('sourceMap'),
                             compress: {
                                 warnings: false
                             }
@@ -279,7 +280,7 @@ module.exports = function (type) {
                     return [];
                 }
                 return [new CopyWebpackPlugin(keepStructure, {
-                    debug: SFX_CONFIG.logLevel && SFX_CONFIG.logLevel.toLowerCase() || 'debug'
+                    debug: SFX_CONFIG.logLevel && SFX_CONFIG.logLevel.toLowerCase() || false
                 })];
             } ()),
 
