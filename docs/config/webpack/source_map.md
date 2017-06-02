@@ -1,4 +1,4 @@
-!> 该配置为`webpack.devtool`的别名，具体可参考：[https://webpack.github.io/docs/configuration.html#devtool](https://webpack.github.io/docs/configuration.html#devtool)
+?> 该配置为`webpack.devtool`的别名，具体可参考：[https://webpack.github.io/docs/configuration.html#devtool](https://webpack.github.io/docs/configuration.html#devtool)
 
 `sfx`内置默认值为：`source-map`
 
