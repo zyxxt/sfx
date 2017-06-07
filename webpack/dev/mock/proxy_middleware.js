@@ -48,36 +48,36 @@ function createProxyOptions (req, config) {
     return _.cloneDeep(proxyOptions);
 }
 
-function addEventListeners (proxy, proxyOptions, lastEventObj) {
-    if (lastEventObj) {
-        handlers.off(proxy, lastEventObj);
-    }
+function addEventListeners (proxy, proxyOptions) {
     return handlers.init(proxy, proxyOptions);
 }
 
 module.exports = (context, options) => {
-
-    let proxyOptions;
-    let config;
     let proxy = httpProxy.createProxyServer({});
-    let lastEventObj;
-
     proxy.on('error', (err, req, res) => {
         let hostname = (req.headers && req.headers.host) || (req.hostname || req.host);
+        let proxyOptions = proxy.proxyOptions;
         let target = proxyOptions.target.host || proxyOptions.target;
 
         logger.error(`Error occurred while trying to proxy request ${req.url} from ${hostname} to ${target}. code: ${err.code}`);
     });
 
+    // 先把事件注册到proxy里
+    let config = configFactory.createConfig(context, options);
+    let proxyOptions = _.cloneDeep(config.options);
+    proxy.proxyOptions = proxyOptions;
+    addEventListeners(proxy, proxyOptions);
+
     return (req, res, next) => {
-        config = createConfig(context, req, options);
+        let config = createConfig(context, req, options);
         if (!shouldSendToProxy(config.context, req, config)) {
             next();
             return;
         }
-        proxyOptions = createProxyOptions(req, config);
-        lastEventObj = addEventListeners(proxy, proxyOptions, lastEventObj);
 
+        // 走代理
+        let proxyOptions = createProxyOptions(req, config);
+        proxy.proxyOptions = proxyOptions;
         proxy.web(req, res, proxyOptions);
     };
 

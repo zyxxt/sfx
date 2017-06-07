@@ -10,6 +10,10 @@ function onProxyReq (proxyReq, req, res, options) {
     logger.info(`onProxyReq: mock proxy matched. ${proxyReq.method}: ${proxyReq.path}`);
     logger.debug(`onProxyReq headers: ${JSON.stringify(proxyReq._headers, true, 4)}`);
 
+    // 上传请求不处理
+    if (req.headers['content-type'] && req.headers['content-type'].indexOf('boundary') !== -1) {
+        return;
+    }
     hook(proxyReq, req, res, options);
 }
 
