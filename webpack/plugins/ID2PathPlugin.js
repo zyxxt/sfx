@@ -13,6 +13,7 @@ class ID2PathPlugin {
         if (!this.sfxRoot) {
             console.error('[ID2PathPlugin] sfxRoot required! ');
         }
+        this.chunkName = config.name;
     }
 
     apply (compiler) {
@@ -20,6 +21,8 @@ class ID2PathPlugin {
         const ID_PATH = {};
 
         compiler.plugin('emit', (compilation, callback) => {
+            
+            // let chunk = compilation.addChunk(me.chunkName);
             compilation.chunks.forEach(chunk => {
                 chunk.modules.forEach(module => {
                     ID_PATH[module.id] = {
@@ -35,8 +38,8 @@ class ID2PathPlugin {
 
             // 记录webpack的模块ID跟实际文件的对应关系
             // 以后可能需要做远程调试本地js的功能
-            let context = 'window.webpack_id_2_path = ' + JSON.stringify(ID_PATH, false, 4);
-            compilation.assets['webpack_module_id_to_path.js'] = {
+            let context = me.getFileContext(ID_PATH);
+            compilation.assets[`${me.chunkName}.js`] = {
                 source () {
                     return context;
                 },
@@ -49,6 +52,24 @@ class ID2PathPlugin {
 
         });
 
+    }
+
+    getFileContext (ID_PATH) {
+        return `window.webpack_id_2_path = ${JSON.stringify(ID_PATH, false, 4)};
+            window.webpack_cache_modules = {};
+            let parentJsonpFunction = window["webpackJsonp"];
+            window["webpackJsonp"] = function (chunkIds, moreModules, executeModules) {
+                for (var chunkId in moreModules) {
+                    if (moreModules.hasOwnProperty(chunId) {
+                        if (!window.webpack_id_2_path[chunkId]) {
+                            continue;
+                        }
+                        window.webpack_cache_modules[window.webpack_id_path[chunkId].userRequest] = moreModules[chunkId];
+                    }
+                }
+                parentJsonFunction.apply(this, arguments);
+            };
+        `;
     }
 
     removeRoot (paths) {

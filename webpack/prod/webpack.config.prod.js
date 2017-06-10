@@ -45,6 +45,7 @@ module.exports = function () {
 
                     // 记录webpack生成的module.id跟实际文件路径的对应关系
                     new ID2PathPlugin({
+                        name: 'webpack_id_2_path',
                         projectRoot: PROJECT_ROOT,
                         sfxRoot: path.resolve(__dirname, '../../')
                     })

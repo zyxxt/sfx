@@ -5,6 +5,7 @@
 let merge = require('webpack-merge');
 let webpack = require('webpack');
 let path = require('path');
+let ID2PathPlugin = require('../plugins/ID2PathPlugin');
 
 let getSfxConfig = require('../../lib/getSfxConfig');
 const PROJECT_ROOT = process.cwd();
@@ -49,7 +50,14 @@ module.exports = function () {
                     new webpack.optimize.CommonsChunkPlugin({
                         name: 'manifest',
                         chunks: ['vendor']
-                    })
+                    })/*,
+
+                    // 记录webpack生成的module.id跟实际文件路径的对应关系
+                    new ID2PathPlugin({
+                        name: 'webpack_id_2_path',
+                        projectRoot: PROJECT_ROOT,
+                        sfxRoot: path.resolve(__dirname, '../../')
+                    })*/
                 ];
             } ())
         ]
