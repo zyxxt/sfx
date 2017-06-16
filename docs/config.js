@@ -1,7 +1,7 @@
 
 window.$docsify = {
 
-    repo: 'http://200.200.151.26:800/sfx.sfx',
+    repo: 'http://200.200.151.26:800/sfx/sfx',
 
     name: 'sfx 脚手架帮助文档',
 

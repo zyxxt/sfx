@@ -1,4 +1,7 @@
-- [sfx](home_page)
+- sfx
+    - [概述](home_page)
+    - [预研分析](sfx/pre_research)
+    - [详细设计](sfx/detail_design)
 - webpack
     - [简介](webpack/webpack)
     - [公共代码打包](webpack/common)
