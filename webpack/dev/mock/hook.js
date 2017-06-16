@@ -93,38 +93,32 @@ function mapPath (option) {
 
 function getMockOptions (proxyOption) {
     logger.debug('get mock options...');
+    let ret = { enable: false };
     let realPath = mapPath(proxyOption);
     if (!realPath) {
         logger.debug(`can not find local mock file: ${proxyOption.path}`);
-        return {
-            enable: false
-        };
+        return ret;
     }
     logger.info(`mock map path: ${realPath}`);
 
     // 每次都重新去加载数据
     require.cache[require.resolve(realPath)] = null;
-    let mockModule;
     try {
-        mockModule = require(realPath);
+        let mockModule = require(realPath);
+        if (!mockModule || typeof mockModule.mockData !== 'function') {
+            logger.debug(`can not find "mockData () {}" function in mock file`);
+            return ret;
+        }
+        let data = mockModule.mockData(proxyOption);
+        ret = {
+            enable: typeof mockModule.check === 'function' ? !!mockModule.check(proxyOption) : data !== false,
+            data: data
+        };
     } catch (e) {
         logger.error(e);
-        return {
-            enable: false
-        };
+        return ret;
     }
-
-    if (!mockModule || typeof mockModule.mockData !== 'function') {
-        logger.debug(`can not find "mockData () {}" function in mock file`);
-        return {
-            enable: false
-        };
-    }
-    let data = mockModule.mockData(proxyOption);
-    return {
-        enable: typeof mockModule.check === 'function' ? !!mockModule.check(proxyOption) : data !== false,
-        data: data
-    };
+    return ret;
 }
 
 module.exports = (proxyReq, req, res, options) => {
