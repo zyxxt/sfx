@@ -55,19 +55,25 @@ class ID2PathPlugin {
     }
 
     getFileContext (ID_PATH) {
-        return `window.webpack_id_2_path = ${JSON.stringify(ID_PATH, false, 4)};
+        return `
+            window.webpack_id_2_path = ${JSON.stringify(ID_PATH, false, 4)};
             window.webpack_cache_modules = {};
             let parentJsonpFunction = window["webpackJsonp"];
             window["webpackJsonp"] = function (chunkIds, moreModules, executeModules) {
                 for (var chunkId in moreModules) {
-                    if (moreModules.hasOwnProperty(chunId) {
+                    if (moreModules.hasOwnProperty(chunkId)) {
                         if (!window.webpack_id_2_path[chunkId]) {
                             continue;
                         }
-                        window.webpack_cache_modules[window.webpack_id_path[chunkId].userRequest] = moreModules[chunkId];
+                        if (!window.webpack_id_2_path[chunkId].userRequest) {
+                            continue;
+                        }
+                        window.webpack_cache_modules[window.webpack_id_2_path[chunkId].userRequest] = moreModules[chunkId];
                     }
                 }
-                parentJsonFunction.apply(this, arguments);
+                if (parentJsonpFunction) {
+                    return parentJsonpFunction.apply(this, arguments);
+                }
             };
         `;
     }
