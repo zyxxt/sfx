@@ -13,7 +13,7 @@ window.$docsify = {
 
     auto2top: true,
 
-    basePath: '/docs/',
+    basePath: location.pathname,
 
     homepage: 'home_page.md',
 
