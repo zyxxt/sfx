@@ -1,6 +1,6 @@
 - sfx
     - [概述](home_page)
-    - [预研分析](sfx/pre_research)
+    - [预研报告](sfx/pre_research)
     - [详细设计](sfx/detail_design)
 - webpack
     - [简介](webpack/webpack)
