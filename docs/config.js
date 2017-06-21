@@ -13,7 +13,7 @@ window.$docsify = {
 
     auto2top: true,
 
-    basePath: location.pathname,
+    basePath: location.pathname.replace(/\/\w+(\.\w+)?$/, '\/'),
 
     homepage: 'home_page.md',
 
