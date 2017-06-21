@@ -22,9 +22,9 @@
 
 对于上面的两个页面，都会依赖`jquery`，根据`webpack`的打包规则，默认会把所有依赖的文件全都打包在一起，这样会导致一个很严重的问题，生成的`app1.js`、`app2.js`都会把`jquery`打包到自身的文件中去，对于这种问题，下面介绍几种方法，对这些第三方的模块代码进行打包。不同的方式都要相应的优缺点，可以根据产品线情况自行处理
 
-- [CommonsChunkPlugin](webpack/common?CommonsChunkPlugin)
-- [DllReferencePlugin](webpack/common?DllReferencePlugin)
-- [output/libraryTarget](webpack/common?libraryTarget)
+- [CommonsChunkPlugin](webpack/common?id=CommonsChunkPlugin)
+- [DllReferencePlugin](webpack/common?id=DllReferencePlugin)
+- [output/libraryTarget](webpack/common?id=libraryTarget)
 
 ## CommonsChunkPlugin
 
