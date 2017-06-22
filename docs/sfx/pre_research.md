@@ -72,6 +72,10 @@
 
 目前整个公司的前端的代码都是没有跑过任何测试代码的，代码质量纯粹靠开发人员自己保障，对于一些核心代码，比如框架代码，很容易出来改动引发。需要有一套完善的方案保证代码质量。单元测试、自动化测试、覆盖率分析这几个对代码质量有很大的提升作用
 
+- **代码质量检查**
+
+公司目前对JS代码质量比较松，目前也只有`HCI`、`AC`的代码有通过`jshint`进行代码质量扫描，但该工具有一定的局限性，它本身只有内置的某些规则，无法进行自定义的扩展。经常出现低级错误工具却扫描不出来的问题
+
 ## 预研目标
 
 1. 对比分析`grunt`、`glup`、`webpack`等常用的打包方式，跟目前公司使用的`sfis`对比选择一个更加适合公司产品线打包方案
@@ -190,6 +194,37 @@
                 .assert.elementPresent('#nav')
                 .assert.elementPresent('#main')
                 .end();
+        }
+    };
+
+### eslint
+
+> 可扩展的JS代码质量扫描工具，可参考：[http://eslint.org/](http://eslint.org/)
+
+它本身的内置规则将近200条，而且支持自定义规则，可以通过插件的方式把`checklist`的大部分规则都覆盖全，比如：
+
+    function checkLastSegment (node) {
+        // report problem for function if last code path segment is reachable
+    }
+
+    module.exports = {
+        meta: { ... },
+        create: function(context) {
+            // declare the state of the rule
+            return {
+                ReturnStatement: function(node) {
+                    // at a ReturnStatement node while going down
+                },
+                // at a function expression node while going up:
+                "FunctionExpression:exit": checkLastSegment,
+                "ArrowFunctionExpression:exit": checkLastSegment,
+                onCodePathStart: function (codePath, node) {
+                    // at the start of analyzing a code path
+                },
+                onCodePathEnd: function(codePath, node) {
+                    // at the end of analyzing a code path
+                }
+            };
         }
     };
 
