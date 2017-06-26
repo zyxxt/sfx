@@ -71,6 +71,7 @@ exports.run = () => {
                     logger.info(`${path.join(dir, file)}. done`);
                 });
                 logger.warn('fuck ie! transform es3 success');
+                process.exit(0);
             }, 100);
         }
     });
