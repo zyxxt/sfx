@@ -13,13 +13,40 @@ exports.init = function (template, option) {
     templateTask.run(template, option);
 };
 
-exports.build = function () {
-    let thirdTask = require(WEBPACK_THIRD_PATH);
-    
-    thirdTask.run().then(() => {
-        let prodTask = require(WEBPACK_PRODUCTION);
-        prodTask.run();
-    });
+exports.build = function (tasks) {
+    const THIRD = 'thirdParts';
+    const PROJECT = 'project';
+    if (!tasks || !tasks.length) {
+        tasks = [
+            THIRD,
+            PROJECT
+        ];
+    }
+    console.log(`build task: ${tasks}`);
+    let _build = () => {
+        if (tasks.length) {
+            let task = tasks.shift();
+            switch (task) {
+                case THIRD:
+                    task = require(WEBPACK_THIRD_PATH);
+                    break;
+                case PROJECT:
+                    task = require(WEBPACK_PRODUCTION);
+                    break;
+                default:
+                    console.error(`task not found. only support: ${THIRD}`, `${PROJECT}`);
+                    process.exit(-1);
+            }
+            let promise = task.run();
+            if (tasks.length) {
+                promise.then(() => {
+                    _build();
+                });
+            }
+            return promise;
+        }
+    };
+    return _build();
 };
 
 exports.dev = function (address) {

@@ -29,10 +29,10 @@ commander
     });
 
 commander
-    .command('build')
-    .description('build for production')
-    .action(() => {
-        sfx.build();
+    .command('build [tasks...]')
+    .description('build for production. [thirdParts, project]')
+    .action((tasks) => {
+        sfx.build(tasks);
     });
 
 commander
