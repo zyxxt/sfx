@@ -13,6 +13,25 @@ let webpack = require('webpack');
 const SFX_CONFIG = require('../../lib/config');
 let webpackConfig = require('./webpack.config.prod.js');
 
+function fuckIE (dir) {
+    if (!fs.existsSync(dir)) {
+        return;
+    }
+    fs.readdirSync(dir).forEach(file => {
+        if (!/\.js$/.test(file)) {
+            return;
+        }
+        let result = require('babel-core').transform(fs.readFileSync(path.join(dir, file)), {
+            plugins: [
+                "transform-es3-property-literals",
+                "transform-es3-member-expression-literals"
+            ]
+        });
+        fs.writeFileSync(path.join(dir, file), result.code);
+        logger.info(`${path.join(dir, file)}. done`);
+    });
+}
+
 exports.run = () => {
 
     console.log(
@@ -51,28 +70,12 @@ exports.run = () => {
 
         if (SFX_CONFIG.ie8 && SFX_CONFIG.staticDirectory) {
             logger.warn('fuck ie! transform es3 keyword!');
-            let dir = path.join(SFX_CONFIG.output.path, SFX_CONFIG.staticDirectory, 'js');
-            let transformID = setInterval(() => {
-                if (!fs.existsSync(dir)) {
-                    return;
-                }
-                clearInterval(transformID);
-                fs.readdirSync(dir).forEach(file => {
-                    if (!/\.js$/.test(file)) {
-                        return;
-                    }
-                    let result = require('babel-core').transform(fs.readFileSync(path.join(dir, file)), {
-                        plugins: [
-                            "transform-es3-property-literals",
-                            "transform-es3-member-expression-literals"
-                        ]
-                    });
-                    fs.writeFileSync(path.join(dir, file), result.code);
-                    logger.info(`${path.join(dir, file)}. done`);
-                });
+            process.nextTick(() => {
+                // fuckIE(path.join(SFX_CONFIG.output.path, SFX_CONFIG.thirdDist));
+                fuckIE(path.join(SFX_CONFIG.output.path, SFX_CONFIG.staticDirectory, 'js'));
                 logger.warn('fuck ie! transform es3 success');
                 process.exit(0);
-            }, 100);
+            });
         }
     });
 };
