@@ -111,7 +111,7 @@ function getMockOptions (proxyOption) {
         }
         let data = mockModule.mockData(proxyOption);
         ret = {
-            enable: typeof mockModule.check === 'function' ? !!mockModule.check(proxyOption) : data !== false,
+            enable: typeof mockModule.check === 'function' ? !!mockModule.check(proxyOption) && data !== false : data !== false,
             data: data
         };
     } catch (e) {

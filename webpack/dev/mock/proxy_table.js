@@ -20,6 +20,20 @@ function onProxyReq (proxyReq, req, res, options) {
 function onProxyRes (proxyRes, req, res, options) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     logger.debug(`[Proxy Response] headers: ${JSON.stringify(proxyRes.headers, true, 4)}`);
+
+    if (Array.isArray(proxyRes.headers["set-cookie"])) {
+        proxyRes.headers["set-cookie"] = proxyRes.headers["set-cookie"].map(cookie => {
+            let arr = cookie.split(/\s*;\s*/);
+            let ret = [];
+            arr.forEach(item => {
+                if (!/^domain=/.test(item)) {
+                    ret.push(item);
+                }
+            });
+            return ret.join('; ');
+        });
+    }
+
 }
 
 module.exports = () => {
